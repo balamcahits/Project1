@@ -1,0 +1,174 @@
+define(["framework/widgetWithTemplate", "roles/listener/rolesListener"], function() {
+	Clazz.createPackage("com.components.roles.js");
+
+	Clazz.com.components.roles.js.rolesCreate = Clazz.extend(Clazz.WidgetWithTemplate, {
+		rolesListener : null,
+		// template URL, used to indicate where to get the template
+		templateUrl: commonVariables.contexturl + "components/roles/template/rolesCreate.tmp",
+		configUrl: "components/roles/config/config.json",
+		name : commonVariables.roles,
+		roles : null,
+		rolesRequestBody : {},
+
+		/***
+		 * Called in initialization time of this class 
+		 */
+		initialize : function(){
+			var self = this;
+			if(self.rolesListener === null){
+				self.rolesListener = new Clazz.com.components.roles.js.listener.rolesListener();
+			}	
+		},
+
+		postRender : function(element) {
+			var self = this;
+			self.rolesListener.ajaxCall(self.rolesListener.getRequestHeader('', "permissions"), function(response) {
+				$.each(response.response,function(index,value) {
+					$('#permissions ul').append('<li id='+value.id+'><input type="checkbox">'+value.name+'</li>');
+				});
+				
+			});   
+		},
+		
+		pageRefresh : function() {
+			var self = this;
+			commonVariables.navListener.getMyObj('roles', function(retVal) {
+				self.roles = retVal;							
+				Clazz.navigationController.push(self.roles, commonVariables.animation);
+			});
+		},
+		
+		/***
+		 * Bind the action listeners. The bindUI() is called automatically after the render is complete 
+		 *
+		 */
+		bindUI : function(){
+			var self=this, tabheight;
+			
+			var offset, currentHeight;
+
+			offset = 116;
+			currentHeight = $(window).height();
+
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+				switch(currentHeight) {
+					case 460:
+					case 548: offset = 107; break;
+					case 480:
+					case 568: offset = 127; break;
+					default: offset = 116; break; 
+				}
+			} 
+
+			tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+			$('.create_table_div').css('height',tabheight + 'px'); 
+			
+			$(window).resize(function() {
+				
+				offset = 116;
+				currentHeight = $(window).height();
+
+				if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+					switch(currentHeight) {
+						case 200:
+						case 288: offset = 66; break;
+						case 220:
+						case 308: offset = 86; break;
+						case 460:
+						case 548: offset = 107; break;
+						case 480:
+						case 568: offset = 127; break;
+						default: offset = 116; break; 
+					}
+				} 
+				
+				tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+				$('.create_table_div').css('height',tabheight + 'px'); 
+			});
+			
+			$("#cancel_roles").click(function() {
+				// Keyboard Fix for Mobile Devices
+				setTimeout(function(){
+					  window.scrollTo(0, 0);
+				}, 0);
+
+				commonVariables.navListener.getMyObj('roles', function(retVal) {
+					self.roles = retVal;							
+					Clazz.navigationController.push(self.roles, commonVariables.animation);
+				});
+			});
+						
+			
+			$('#btnRight').click(function(e) {
+				var selectedOpts = [];
+				$('#permissions ul li').each(function() {
+					if($(this).find('input[type="checkbox"]').prop('checked') === true) {
+						$(this).remove();
+						selectedOpts.push($(this));
+					}
+				});
+				if (selectedOpts.length == 0) {
+					alert("Nothing to move.");
+					e.preventDefault();
+				}				
+				$('#assigned ul').append(selectedOpts);
+				e.preventDefault();
+			});
+
+			$('#btnLeft').click(function(e) {
+				var selectedOpts = [];
+				$('#assigned ul li').each(function() {
+					if($(this).find('input[type="checkbox"]').prop('checked') === true) {
+						$(this).remove();
+						selectedOpts.push($(this));
+					}
+				});
+				if (selectedOpts.length == 0) {
+					alert("Nothing to move.");
+					e.preventDefault();
+				}
+				$('#permissions ul').append(selectedOpts);
+				$('#permissions ul').find('input[type="checkbox"]').removeAttr('checked');
+				//$('#lstBox2').append('<li>DDDDDDDDD</li>');
+				e.preventDefault();
+			});
+			
+			$("#rolecreate").click(function() {
+				// Keyboard Fix for Mobile Devices
+				setTimeout(function(){
+					  window.scrollTo(0, 0);
+				}, 0);
+				
+				var nameobj = $("#rolename");
+				var descobj = $("#roledesc");
+				if(nameobj.val() === '') {
+					nameobj.addClass('errormessage');
+					nameobj.focus();
+					nameobj.attr('placeholder','Enter Name');
+					nameobj.bind('keypress', function() {
+						$(this).removeClass("errormessage");
+						$(this).removeAttr("placeholder");
+					});
+				} else {
+					var name = $(nameobj).val();
+					var description = $(descobj).val();
+					var assignedRoles = [];					
+					
+					$('#assigned ul li').each(function() {
+						assignedRoles.push($(this).attr('id'));
+					});
+					self.rolesRequestBody.name = name;
+					self.rolesRequestBody.permissions = assignedRoles;
+					self.rolesRequestBody.description = description;
+					self.rolesListener.ajaxCall(self.rolesListener.getRequestHeader(self.rolesRequestBody, "create"), function(response) {
+						self.pageRefresh();
+					});
+				}	
+			});		
+			
+			Clazz.navigationController.jQueryContainer = commonVariables.contentPlaceholder;
+		}
+	});	
+
+	return Clazz.com.components.roles.js.rolesCreate;
+});

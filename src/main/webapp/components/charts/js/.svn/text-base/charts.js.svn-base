@@ -1,0 +1,369 @@
+define([], function() {
+
+	Clazz.createPackage("com.components.charts.js");
+
+	Clazz.com.components.charts.js.Charts = Clazz.extend(Clazz.WidgetWithTemplate, {
+		/***
+		 * Called in initialization time of this class 
+		 *
+		 * @config: configurations for this listener
+		 */
+		 
+		array : [],
+		
+		initialize : function(config) {
+			var self = this;
+		},
+		
+		multilineChart : function(placeholder, data, color) {			
+			$.plot(placeholder, data, {
+				xaxis: {
+					mode: "time"
+				},
+				series : {
+					/* lines: { show: true },
+					points: { show: true } */
+				},
+				legend: {
+						position: 'ne'
+				},
+				colors: [ 'red','green','blue','yellow','brown']	
+			});
+		},
+	
+		lineChartTime : function(placeholder, data, color) {
+			var plot = $.plot(placeholder, [data], {
+				xaxis: {
+					mode: "time"
+				},
+				series : {
+					color: color,
+					/* lines: { show: true },
+					points: { show: true } */
+				}	
+			});
+		},
+
+		pieChart : function(placeholder, data, show, hoverable, clickable, position) {
+				placeholder.unbind();
+				$.plot(placeholder, data, {
+					series: {
+						pie: { 
+							show: show
+						}
+					},
+					grid: {
+						hoverable: hoverable,
+						clickable: clickable
+					},
+					legend: {
+						position: position
+					},
+					colors: ['blue', 'brown','black','green','purple' ]
+				});
+
+				placeholder.bind("plothover", function(event, pos, obj) {
+
+					if (!obj) {
+						return;
+					}
+
+					var percent = parseFloat(obj.series.percent).toFixed(2);
+					$("#hover").html("<span style='font-weight:bold; color:" + obj.series.color + "'>" + obj.series.label + " (" + percent + "%)</span>");
+				});
+
+				placeholder.bind("plotclick", function(event, pos, obj) {
+					if (!obj) {
+						return;
+					}
+					/* percent = parseFloat(obj.series.percent).toFixed(2);
+					alert(""  + obj.series.label + ": " + percent + "%"); */
+				});
+		},
+	
+		barChart : function(placeholder, data, stack, bars, lines, steps, color) {
+			$.plot(placeholder, [data], {
+				series: {
+					stack: stack,
+					lines: {
+						show: lines,
+						steps: steps
+					},
+					bars: {
+						show: bars,
+						fill: 1,
+						barWidth: 0.1
+					},
+					color: color
+				},
+				grid: {
+					hoverable: true
+				}
+			});
+		},
+		
+		constructChartData : function(response,value,callback) {
+			var self = this, xData = [], yData = [], finalData = [], new_data=[], sum = 0;
+			var Stringval = decodeURI(response.response);
+			var JSONval = $.parseJSON(Stringval), xData = [],yData = [], finalData=[], xaxisval, arr = [], fullpath, pathToTraverse, finalArr = [], path, result, indexcount, finalresult;
+			xaxisval = value.properties.xaxis.toString();
+			arr = xaxisval.split('#');
+			fullpath = arr[arr.length-1];
+			pathToTraverse = fullpath.split('.');
+			for(var i =0;i<pathToTraverse.length;i++) {
+				finalArr.push(pathToTraverse[i]);
+			}
+			path=JSONval[finalArr[0]];
+			indexcount = 1;
+			finalresult = self.getVal(path, finalArr, indexcount);
+			for(var c=0;c<finalresult.length;c++ ) {
+				if(c%2 === 0)
+					xData.push(finalresult[c]);
+				else
+					yData.push(finalresult[c]);
+			};
+			callback(xData,yData);
+		},
+		
+		constructPieInfo : function(response,value){
+			var self = this, xData = [], yData = [], finalData = [], new_data=[], sum = 0;;
+			//try{
+				self.constructChartData(response,value,function(xData,yData) {
+					for(var i = 0;i<xData.length;i++) {
+						finalData[i] = {
+							label: xData[i],
+							data: yData[i]
+						}
+					};
+					self.pieChart($("#placeholder_"+value.id), finalData, true, true, true, "ne");
+					$("#placeholder_"+value.id).bind("plothover", function (event, pos, item) {
+					if (item) {
+						if ($(this).data('previous-post') != item.seriesIndex) {
+							//plot.unhighlight();
+							//plot.highlight(item.series, item.datapoint);
+							$(this).data('previous-post', item.seriesIndex);
+						}
+						$("#tooltip_"+value.id).remove();
+						item.datapoint = parseFloat(item.datapoint).toFixed(2);
+						y = ': ' + item.datapoint + '%';
+							
+						self.toolTipForPie(pos.pageX, pos.pageY, item.series.label + " " + y,value.id);
+					} else {
+						$("#tooltip_"+value.id).css('display','none');
+					}	
+					});		
+					$("#tooltip_"+value.id).css('display','none');	
+				});	
+				
+			//}catch(exception){
+				//ex
+			//}
+		},
+		
+		constructTable : function(response,value) {
+			var self = this, oTable;
+			$("#placeholder_"+value.id).empty();
+			var tab_view = '<div class="table_div dash_tab" style="height:100%;"><table aria-describedby="example_info" class="table table_dashboard table-striped table-bordered dataTable" id="example_'+value.id+'" border="0" cellpadding="0" cellspacing="0"><thead><tr role="row"></tr></thead><tbody aria-relevant="all" aria-live="polite" role="alert"></tbody></table></div>';
+			$("#placeholder_"+value.id).append(tab_view);
+			
+			var Stringval = decodeURI(response.response);
+			var JSONval = $.parseJSON(Stringval);
+			
+			/* $.each(JSONval.response.docs,function(index,value) {
+				console.info(index,value);
+			}); */
+			var tColumns = '', tbody = '',theadArr = [],thead = [];
+			$.each(JSONval.response.docs, function(index,currentVal){
+				tColumns = '';
+				//looping key values
+				$.each(currentVal, function(key, val){
+					if($.inArray(key, theadArr) < 0){
+						if(key !== 'id' && key !== '_version_') {
+							theadArr.push(key);
+							thead += '<th aria-controls="example" role="columnheader" class="sorting">'+key+'</th>';
+						}
+					}
+					if(key !== 'id' && key !== '_version_') {
+						tColumns += '<td class=" sorting_1">'+ val +'</td>';
+					}	
+				});
+				tbody += '<tr class="gradeA">' + tColumns + '</tr>';
+			});
+			
+			$('#example_'+value.id).find('thead tr').append(thead);
+			$('#example_'+value.id).find('tbody').append(tbody);
+			//oTable = $('#example').dataTable();
+			require(["lib/data_tables"], function(dataTable){
+				var ht = $('#example_'+value.id).parents().find('.dashboard_view').height();
+				oTable = $('#example_'+value.id).dataTable( {
+				"bDestroy": true,
+				"sDom" : "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+				"sPaginationType": "full_numbers",
+				 "aoColumnDefs" : [ {
+					'bSortable' : false,
+					'aTargets' : []
+				} ]
+					/* "sScrollY": ht-100,					
+					"sScrollXInner": "100%",
+					"bScrollCollapse": true,
+					"bPaginate": false,
+					"bFilter": false */
+			} );
+			$('.row').remove();
+			$('#example_'+value.id+'_wrapper').css('overflow','auto');	
+			$('#example_'+value.id+'_wrapper').css('height','200px');	
+			/* console.info($('.dataTables_scroll'));
+			$('.dataTables_scroll').css('height','100% !important');
+			$('.dataTables_scroll').css('width','100% !important'); */
+		 // $('#example_'+value.id+'_wrapper').css('overflow','hidden');			
+			//self.scrollFunction();
+			/* require(["lib/fixedHeader"], function(){
+				//setTimeout(function() {
+				new FixedHeader(document.getElementById('example_'+value.id));
+				//},1000);
+			}); */
+
+			/* $('.dataTables_wrapper').scroll(function() {
+				console.info(value.id);
+				console.info('def',$('.FixedHeader_Cloned'));
+				$('.FixedHeader_Cloned').show();
+			}); */
+
+			});
+			
+				/* var oTable = $('#example').dataTable( 
+				{
+					"sScrollY": "300px",
+					"sScrollX": "100%",
+					"sScrollXInner": "150%",
+					"bScrollCollapse": true,
+					"bPaginate": false,
+					"bFilter": false
+				} ); */
+			
+			
+		},
+		
+		scrollFunction : function() {
+			var self = this;
+			$('.tab-content').scroll(function(e) {
+			});
+		},
+		
+		getVal : function(value,finalArr,i) {
+					var self = this;
+						var result;
+					if(i === finalArr.length) {
+						return value;
+					}
+					$.each(value,function(ind,val) {
+						if(ind === finalArr[i]) {
+							i++;
+							result = self.getVal(val,finalArr,i);	
+						}						
+					});	
+					return result;
+				},
+		
+		toolTipForPie : function(x, y, contents,placeholderindex) {
+			$('<div id="tooltip_'+placeholderindex+'">' + contents + '</div>').css( {
+				position: 'absolute',
+				top: y + 5,
+				left: x + 5,
+				border: '1px solid #fdd',
+				padding: '2px',
+				'background-color': '#fee',
+				opacity: 0.80
+			}).appendTo("body");//.fadeIn(200);
+		},
+		
+		constructLineInfo : function(response,value){
+			var self = this;			
+			var xData = [], yData = [], finalData = [];			
+			self.constructChartData(response,value,function(xData,yData) {
+				for(var i = 0;i<xData.length;i++) {
+					finalData.push([Date.parse(xData[i]),yData[i]]);
+				};
+				self.lineChartTime($("#placeholder_"+value.id), finalData, 'orange');
+			});	
+		},
+		
+		constructMultiLineInfo : function(response,value){
+			var self = this;			
+			var xData = [], yData = [], finalData = [], Stringval, JSONval, finalPassData = [];
+			var xaxisval, arr = [], fullpath, pathToTraverse, finalArr = [], path, result, indexcount, finalresult, tempArray = [];			
+			xaxisval = value.properties.xaxis.toString();
+			arr = xaxisval.split('#');
+			fullpath = arr[arr.length-1];
+			pathToTraverse = fullpath.split('.');
+			for(var i =0;i<pathToTraverse.length;i++) {
+				finalArr.push(pathToTraverse[i]);
+			}
+			var t = value.properties.yaxis;
+			$.each(response.response,function(index1,value1) {
+					var flag = 0;
+					/* $.each(t,function(ind,val) {
+						console.info($(this));
+						console.info("indddd",ind);
+						console.info(index1+1);
+						console.info(val);
+						if(index1+1 == val) {
+							console.info('enterinside');
+							flag = 1;
+							console.info(t[ind]);
+							console.info(val);
+							$(this).remove();
+							console.info(t);
+							 return false;
+						}	
+					}); */
+					//if(flag === 1) {
+						xData = [];
+						yData = [];
+						Stringval = '';
+						JSONval = '';
+						Stringval = decodeURI(value1);
+						JSONval = $.parseJSON(Stringval);			
+						path=JSONval[finalArr[0]];
+						indexcount = 1;
+						finalresult = self.getVal(path, finalArr, indexcount);
+						for(var c=0;c<finalresult.length;c++ ) {
+							if(c%2 === 0)
+								xData.push(finalresult[c]);
+							else
+								yData.push(finalresult[c]);
+						};
+						tempArray = [];
+						for(var ij = 0;ij<xData.length;ij++) {
+							tempArray[ij] = [];
+							tempArray[ij][0] = Date.parse(xData[ij]);						
+								tempArray[ij][1] = yData[ij];
+						};						
+						self.array[index1] = [];
+						self.array[index1] = tempArray;
+						finalPassData.push({label: "rating"+(index1+1), data:self.array[index1]});
+					//}	
+			});
+						
+			
+			self.multilineChart($("#placeholder_"+value.id), finalPassData, 'orange');
+		},
+		
+		constructBarInfo : function(response,value){
+			var self = this, barChartData = [], finalData = [];
+			for (var i = 0; i <= 10; i += 1) {
+				barChartData.push([i, 1]);
+			}
+			
+			self.constructChartData(response,value,function(xData,yData) {
+				for(var i = 0;i<xData.length;i++) {
+					finalData.push([xData[i],yData[i]]);
+				};
+					
+				self.barChart($("#placeholder_"+value.id), finalData, 10, true, false, false, 'purple');
+			});	
+		},
+	});
+
+	return Clazz.com.components.charts.js.Charts;
+});

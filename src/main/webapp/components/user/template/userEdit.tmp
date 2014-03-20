@@ -1,0 +1,28 @@
+<div id="container">
+    <section class="right_content">
+        <div class="breadcrumb_div">
+            <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Admin <span>> &nbsp </span></div><span> User</span></div>
+        </div>
+        <div class="create_div">
+            <div class="create_table_div">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span data-i18n="user.firstname"></span><sup>*</sup></label>
+                    <div class="col-sm-10"><input id="userfirstname" class="form-control" type="text" value="{{data.firstName}}" maxlength="30"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span data-i18n="user.lastname"></span><sup>*</sup></label>
+                    <div class="col-sm-10"><input id="userlastname" class="form-control" type="text" value="{{data.lastName}}" maxlength="30"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span data-i18n="user.email"></span><sup>*</sup></label>
+                    <div class="col-sm-10"><input id="useremail" class="form-control" type="text" value={{data.emailId}} maxlength="30"></div>
+                </div>
+			</div>
+            <div class="create_buttons">
+                <input id="userupdate" type="button" class="btn_style create_btn" data-i18n="[value]commonlabel.btn.update;">
+                <input id="cancel_user" class="btn_style cancel_icon_btn" type="button" data-i18n="[value]commonlabel.btn.cancel;">
+            </div>
+        </div>
+        <!--main-content div ends -->
+    </section>
+</div>

@@ -1,0 +1,47 @@
+<div id="container">
+        <section class="right_content">
+            <div class="breadcrumb_div">
+                <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Admin <span>> &nbsp </span></div><span> Data Source Create</span></div>
+            </div>
+            <div class="create_div">
+                <div class="create_table_div">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span data-i18n="commonlabel.label.name"></span><sup>*</sup></label>
+                        <div class="col-sm-10"><input id="datasrcname" class="form-control" type="text" maxlength="30"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span data-i18n="commonlabel.label.description"></span></label>
+                        <div class="col-sm-10"><textarea id="datasrcdesc" class="form-control" maxlength="150"></textarea></div>
+                    </div>
+					<div class="form-group">
+                        <label class="col-sm-2 control-label"><span data-i18n="datasource.appId"></span><sup>*</sup></label>
+                        <div class="col-sm-10"><input id="appId" class="form-control" type="text" maxlength="60"></div>
+                    </div>                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span data-i18n="commonlabel.label.responseType"></span></label>
+                        <div class="col-sm-10">
+                        	<select id="datasrctype" class="form-control">
+                        		<option value="json">JSON</option>
+                        		<option value="xml">XML</option>
+                            </select>
+                        </div>
+                    </div>
+					<div class="form-group">
+                        <label class="col-sm-2 control-label"><span data-i18n="datasource.storeType"></span></label>
+                        <div class="col-sm-10">
+                        	<select id="storetype" class="form-control">
+                        		{{#each data}}
+                        			<option value="{{name}}" id="{{id}}">{{name}}</option>
+                        		{{/each}}
+							</select>
+                        </div>
+                    </div>	
+                </div>
+                <div class="create_buttons">
+                    <input id="datasrccreate" type="button" class="btn_style create_btn" data-i18n="[value]commonlabel.btn.create;">
+                    <input id="cancel_create" class="btn_style cancel_icon_btn" type="button" data-i18n="[value]commonlabel.btn.cancel;">
+                </div>
+            </div>
+            <!--main-content div ends -->
+        </section>
+</div>

@@ -1,0 +1,109 @@
+<div id="container">
+        <section class="right_content">
+            <div class="page_heading">
+               <div class="bs-docs-example dashboard_tabdiv">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active"><a data-toggle="tab" href="#ios"><img src="themes/images/ios_icon.png" alt="ios">IOS</a></li>
+                        <li><a data-toggle="tab" href="#android"><img src="themes/images/andriod_icon.png" alt="android">ANDROID</a></li>
+                        <li><a data-toggle="tab" href="#windows"><img src="themes/images/windows_icon.png" alt="whindows">WINDOWS</a></li>
+                        <li><a data-toggle="tab" href="#overall"><img src="themes/images/overall_icon.png" alt="overall">OVER ALL</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content" id="myTabContent">
+                <div id="ios" class="tab-pane fade active in">
+                    <div class="breadcrumb_div download_bread_crumb">
+						<div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>IOS <span>> &nbsp </span></div><span> Download Trend</span></div>
+						<div class="select_country">
+							<ul class="nav navbar-nav navbar-right">
+								<li id="fat-menu" class="dropdown">
+								<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Select Country <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+										<li><a role="menuitem" href="javascript:;">India</a></li>
+										<li><a role="menuitem" href="javascript:;">USA</a></li>
+										<li><a role="menuitem" href="javascript:;">UK</a></li>
+										<li><a role="menuitem" href="javascript:;">Australia</a></li>
+										<li><a role="menuitem" href="javascript:;">France</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div id="reportrange" class="pull-right">
+							<span></span><img src="themes/images/datepicker_icon.png" class="float_right" alt="date picker">
+						</div>
+                    </div>
+                	
+                </div>
+                <div id="android" class="tab-pane fade">
+                    <div class="breadcrumb_div download_bread_crumb">
+                        <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Android <span>> &nbsp </span></div><span> Download Trend</span></div>
+                        <div class="select_country">
+							<ul class="nav navbar-nav navbar-right">
+								<li id="fat-menu" class="dropdown">
+								<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Select Country <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+										<li><a role="menuitem" href="javascript:;">India</a></li>
+										<li><a role="menuitem" href="javascript:;">USA</a></li>
+										<li><a role="menuitem" href="javascript:;">UK</a></li>
+										<li><a role="menuitem" href="javascript:;">Australia</a></li>
+										<li><a role="menuitem" href="javascript:;">France</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div id="reportrange" class="pull-right">
+							<span></span><img src="themes/images/datepicker_icon.png" class="float_right" alt="date picker">
+						</div>
+                    </div>
+                	
+                </div>
+                <div id="windows" class="tab-pane fade">
+                    <div class="breadcrumb_div download_bread_crumb">
+                        <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Windows <span>> &nbsp </span></div><span> Download Trend</span></div>
+                        <div class="select_country">
+							<ul class="nav navbar-nav navbar-right">
+								<li id="fat-menu" class="dropdown">
+								<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Select Country <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+										<li><a role="menuitem" href="javascript:;">India</a></li>
+										<li><a role="menuitem" href="javascript:;">USA</a></li>
+										<li><a role="menuitem" href="javascript:;">UK</a></li>
+										<li><a role="menuitem" href="javascript:;">Australia</a></li>
+										<li><a role="menuitem" href="javascript:;">France</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div id="reportrange" class="pull-right">
+							<span></span><img src="themes/images/datepicker_icon.png" class="float_right" alt="date picker">
+						</div>
+                    </div>
+                	
+                </div>
+                <div id="overall" class="tab-pane fade">
+                    <div class="breadcrumb_div download_bread_crumb">
+                        <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Overall <span>> &nbsp </span></div><span> Download Trend</span></div>
+                        <div class="select_country">
+							<ul class="nav navbar-nav navbar-right">
+								<li id="fat-menu" class="dropdown">
+								<a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Select Country <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+										<li><a role="menuitem" href="javascript:;">India</a></li>
+										<li><a role="menuitem" href="javascript:;">USA</a></li>
+										<li><a role="menuitem" href="javascript:;">UK</a></li>
+										<li><a role="menuitem" href="javascript:;">Australia</a></li>
+										<li><a role="menuitem" href="javascript:;">France</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div id="reportrange" class="pull-right">
+							<span></span><img src="themes/images/datepicker_icon.png" class="float_right" alt="date picker"> 
+						</div>
+                    </div>
+                	
+                </div>
+            </div>
+            <!--main-content div ends -->
+        </section>
+</div>

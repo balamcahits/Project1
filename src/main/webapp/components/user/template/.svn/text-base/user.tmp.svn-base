@@ -1,0 +1,33 @@
+<div id="container">
+    <section class="right_content">
+                <div class="breadcrumb_div">
+                    <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Admin <span>> &nbsp </span></div><span> Users</span></div>
+                </div>
+              	<div class="table_div">
+					<div class="DTTT btn-group"><a href="#" id="usercreate" data-original-title="Create" class="tooltips btn_style create_datatable_btn" data-toggle="tooltip" data-placement="bottom" title=""></a><a href="#" data-original-title="Edit" class="tooltips btn_style edit_icon_btn" data-toggle="tooltip" data-placement="bottom" title="" name="editUser" disabled></a><a data-original-title="Delete" href="#" name="deleteUser" id="bootstrap" class="tooltips btn_style delete_icon_btn" data-toggle="tooltip" data-placement="bottom" title="" disabled></a></div>
+                	<table aria-describedby="example_info" class="table table-striped table-bordered dataTable" id="example" border="0" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr role="row">
+                            <th aria-sort="ascending" style="width: 166px;" aria-controls="example" role="columnheader" class="sorting_asc"><span data-i18n="user.firstname"></span></th>
+                            <th style="width: 220px;" aria-controls="example" role="columnheader" class="sorting"><span data-i18n="user.lastname"></span></th>
+                            <th style="width: 200px;" aria-controls="example" role="columnheader" class="sorting"><span data-i18n="user.email"></span></th>
+                            
+					   </tr>
+                </thead>
+                <tbody aria-relevant="all" aria-live="polite" role="alert">
+               		{{#if userlist}}
+                   		{{#each userlist}} 
+							<tr class="gradeA even" userId={{id}}>
+								<td class="sorting_1">{{firstName}}</td>
+								<td class=" ">{{lastName}}</td>
+								<td class=" ">{{emailId}}</td>
+								
+							</tr>
+						{{/each}}
+					{{/if}}	
+                </tbody>
+           </table>
+                </div>
+        <!--main-content div ends -->
+    </section>
+</div>

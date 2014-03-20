@@ -1,0 +1,212 @@
+<div id="container">
+        <section class="right_content">
+            <div class="breadcrumb_div">
+                <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span></div><span>Dashboard</span></div>
+            </div>
+            <div class="create_div">
+                <div class="create_table_div">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Widget Name<sup>*</sup></label>
+                        <div class="col-sm-10"><input id="widget_name" class="form-control" type="text" maxlength="30" value="{{dashboardData.name}}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Widget Type</label>
+                        <div class="col-sm-10">
+                        	<select class="form-control selectpicker" id="widgetType">
+                        		<option class="table_img" value="table">Table</option>
+                                <option class="line_img" value="linechart">Line Chart</option>
+                                <option class="pie_img" value="piechart">Pie Chart</option>
+                                <option class="bar_img" value="barchart">Bar Chart</option>
+								<option class="line_img" value="multilinechart">Multi-Line Chart</option>
+                            </select>
+                        </div>
+                    </div>
+					<div class="form-group">
+                        <label class="col-sm-2 control-label">DataSource Type<sup>*</sup></label>
+                        <div class="col-sm-10">
+							<select class="form-control selectpicker" id="dataSourceType">
+								{{#each data}}
+                        			<option value="{{name}}" id="{{id}}">{{name}}</option>
+                        		{{/each}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group datsrc">
+                        <label class="col-sm-2 control-label">DataSource Name<sup>*</sup></label>
+                        <div class="col-sm-10">
+							<select class="form-control selectpicker" id="dataSourceId">
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group dashtype">
+                        <label class="col-sm-2 control-label">Dashboard Type<sup>*</sup></label>
+                        <div class="col-sm-10">
+							<select class="form-control selectpicker" id="dashboardType">								
+							</select>
+						</div>
+					</div>		
+					
+                    <div class="form-group queryy">
+                        <label class="col-sm-2 control-label">Query<sup>*</sup></label>
+                        <div class="col-sm-10">
+							<select class="form-control selectpicker select_query" id="query">
+							</select>
+						</div>
+						<!--<div class="col-sm-6"><input type="button" id="execute_query" class="btn_style select_query_btn" value="Query"></div>-->
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Time Range From</label>
+                        <div class="col-sm-10">
+                        	<div id="datetimepicker1" class="input-append date">
+                                <input id="fromTime" type="text" data-format="dd/MM/yyyy hh:mm:ss" class="form-control float_left" maxlength="30" value="{{dashboardData.starttime}}">
+                                <span class="add-on float_left">
+                                <i class="icon-calendar" data-date-icon="icon-calendar" data-time-icon="icon-time"> </i>
+                                </span>
+                                <div class="clear"></div>
+							</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Time Range To</label>
+                        <div class="col-sm-10">
+                        	<div id="datetimepicker2" class="input-append date">
+                                <input id="toTime" type="text" data-format="dd/MM/yyyy hh:mm:ss" class="form-control float_left" maxlength="30" value="{{dashboardData.endtime}}">
+                                <span class="add-on float_left">
+                                <i class="icon-calendar" data-date-icon="icon-calendar" data-time-icon="icon-time"> </i>
+                                </span>
+                                <div class="clear"></div>
+							</div>
+                        </div>
+                    </div>
+					
+					 <div class="form-group">                        
+                        <div class="col-sm-2"><input type="checkbox" class="control-label" id="timeout">Refresh Interval</div>
+						<div class="col-sm-10"><input type="text" class="form-control" id="timeoutval" maxlength="30"></div>
+                    </div>
+                    
+                    <div class="form-group">                        
+                        <div class="col-sm-11"><input type="checkbox" class="control-label" id="showhideDashboard" value=false> Enable Dashboard</div>
+                    </div>
+										
+                    <div id="line-chart-container">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label chart_option">Line Chart</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">X-Axis</label>
+                            <div class="col-sm-2">
+                                <select id="xaxis" class="form-control selectpicker select_axis">
+                                </select>
+                            </div>
+                            <div class="col-sm-7">
+                                <input placeholder="Line Color" id="selectedcolor1" class="pick_color_line form-control select_value float_left">
+                                <div class="float_left pick_color_div">
+                                    <a data-toggle="dropdown">
+                                        <img class="pickcolorlineimg" src="themes/images/pick_color.png" alt="color picker">
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><div id="colorpalette1"></div></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="clear"></div>							
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Y-Axis</label>
+                            <div class="col-sm-2">
+                                <select id="yaxis" class="form-control selectpicker select_axis">
+                                </select>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div id="pie-chart-container">
+                    	<div class="form-group">
+                       		<label class="col-sm-12 control-label chart_option">Pie Chart</label>
+	                    </div>
+						<div class="form-group">
+        	                <label class="col-sm-2 control-label">Percent Value</label>
+            	            <div class="col-sm-10">
+                        	<select class="form-control selectpicker" id="percentval">
+                            </select>
+                        </div>
+	                    </div>
+    	                <div class="form-group">
+	                        <label class="col-sm-2 control-label">Legend Value</label>
+	                        <div class="col-sm-10">
+                        	<select class="form-control selectpicker" id="legendval">
+                            </select>
+                        </div>
+	                    </div>
+                    </div>
+                    <div id="bar-chart-container">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label chart_option">Bar Chart</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Bar Axis</label>
+                            <div class="col-sm-10">
+                                <select class="form-control selectpicker" id="baraxis">
+                                </select>
+                            </div>
+                        </div>
+						 <div class="form-group">
+							<div class="col-sm-7">
+								<table id="tabforbar" class="table bar_chart_table table-bordered" cellpadding="0" cellspacing="0" border="0">
+									<thead>
+										<tr>
+											<th colspan="2">Select Bar Chart Inputs</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<ul class="connected list" id="" name="sortable1">
+												</ul>
+											</td>															
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>	
+                    </div>
+					<div id="multi-line-chart-container">
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label chart_option">Multi-Line Chart</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">X-Axis</label>
+                            <div class="col-sm-10">
+                                <select class="form-control selectpicker" id="multilineaxis">
+                                </select>
+                            </div>
+                        </div>
+						 <div class="form-group">
+							<div class="col-sm-7">
+								<table id="tabforbar" class="table bar_chart_table table-bordered" cellpadding="0" cellspacing="0" border="0">
+									<thead>
+										<tr>
+											<th colspan="2">Select Line Chart Inputs</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<ul class="connected list" id="" name="sortable1">
+												</ul>
+											</td>															
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>	
+                    </div>
+                </div>
+                 <div class="create_buttons">
+                    <input id="dashboardUpdate" type="button" class="btn_style create_btn" data-i18n="[value]commonlabel.btn.update;">
+                    <input id="cancel_create" class="btn_style cancel_icon_btn" type="button" data-i18n="[value]commonlabel.btn.cancel;">
+                </div>
+            </div>
+            <!--main-content div ends -->
+    </section>
+</div>

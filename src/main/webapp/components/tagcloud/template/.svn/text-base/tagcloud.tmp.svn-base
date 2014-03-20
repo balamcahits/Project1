@@ -1,0 +1,20 @@
+<div id="container">
+	<section class="right_content">
+		<div id="myCanvasContainer" class="tag_canvas_container">
+			<canvas id="myCanvas" class="tag_canvas">
+				<p>Anything in here will be replaced on browsers that support the canvas element</p>
+			</canvas>
+		</div>
+		<div id="tags">
+			<ul>
+				<li><a href="javascript:;">Lorem Ipsum</a></li>
+				<li><a href="javascript:;">Lorem Ipsum</a></li>
+				<li><a href="javascript:;">Lorem Ipsum</a></li>
+				<li><a href="javascript:;">Lorem Ipsum</a></li>
+				<li><a href="javascript:;">Lorem Ipsum</a></li>
+				<li><a href="javascript:;">Lorem Ipsum</a></li>
+				<li><a href="javascript:;">Lorem Ipsum</a></li>
+			</ul>
+		</div>       
+	</section>
+</div>

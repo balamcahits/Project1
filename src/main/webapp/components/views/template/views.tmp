@@ -1,0 +1,29 @@
+<div id="container">
+	<section class="right_content">
+		<div class="breadcrumb_div">
+			<div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Admin <span>> &nbsp </span></div><span> Views</span></div>
+		</div>
+		<div class="table_div">
+			<table aria-describedby="example_info" class="table table-striped table-bordered dataTable" id="example" border="0" cellpadding="0" cellspacing="0">
+                <thead>
+					<tr role="row">
+						<th aria-sort="ascending" style="width: 166px;" aria-controls="example" role="columnheader" class="sorting_asc"><span>Name</span></th>
+						<th style="width: 220px;" aria-controls="example" role="columnheader" class="sorting"><span>DataSource Type</span></th>
+						<th style="width: 200px;" aria-controls="example" role="columnheader" class="sorting"><span>DataSource Name</span></th>
+						<th style="width: 200px;" aria-controls="example" role="columnheader" class="sorting"><span>Refresh Interval</span></th>
+					</tr>
+				</thead>
+				<tbody aria-relevant="all" aria-live="polite" role="alert">
+					{{#each dashboardlist}}
+						<tr class="gradeA even" dashboardId={{id}}>
+							<td class="sorting_1">{{name}}</td>
+							<td class=" ">{{dataSourceTypeId}}</td>
+							<td class="{{dataSourceId}}"></td>
+							<td class=" "></td>
+						</tr>
+					{{/each}}	
+				</tbody>
+           </table>
+		</div>
+	</section>
+</div>

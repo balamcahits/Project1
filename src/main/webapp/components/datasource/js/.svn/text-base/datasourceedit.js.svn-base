@@ -1,0 +1,172 @@
+define(["framework/widgetWithTemplate", "datasource/listener/datasourcelistener"], function() {
+	Clazz.createPackage("com.components.datasource.js");
+
+	Clazz.com.components.datasource.js.datasourceedit = Clazz.extend(Clazz.WidgetWithTemplate, {
+		datasourceListener : null,
+		// template URL, used to indicate where to get the template
+		templateUrl: commonVariables.contexturl + "components/datasource/template/datasourceedit.tmp",
+		configUrl: "components/datasource/config/config.json",
+		name : commonVariables.datasource,
+		datasource : null,
+		postBody : {},
+		editDataStore : null,
+		StoreName : null,
+		dataSourceData : null,
+
+		/***
+		 * Called in initialization time of this class 
+		 */
+		initialize : function(){
+			var self = this;
+			if(self.datasourceListener === null){
+				self.datasourceListener = new Clazz.com.components.datasource.js.listener.datasourcelistener();
+			}	
+		},
+
+		postRender : function(element) {
+			var self=this;
+			$("#edittype").val(self.editDataStore.mobileAPPStoreResponseType);
+			if(self.editDataStore.mobileAPPStoreResponseType === "JSON")
+				$("#edittype").append('<option value="json">JSON</option><option value="xml">XML</option>');
+			else
+				$("#edittype").append('<option value="xml">XML</option><option value="json">JSON</option>');
+			$("#storetype option:selected").text(self.StoreName);
+			$.each(self.dataSourceData,function(index,value) {
+				if(self.StoreName !== value.name )
+					$("#storetype").append('<option dynId='+value.id+'>'+value.name+'</option>');
+			});
+		},
+		
+		preRender: function(whereToRender, renderFunction){
+			var self = this, editData = {};
+			self.datasourceListener.ajaxCall(self.datasourceListener.getRequestHeader('', "datasourcetype"), function(response) {
+				self.dataSourceData = response.response;
+				self.datasourceListener.ajaxCall(self.datasourceListener.getRequestHeader('', "editdatasource"), function(response2) {
+					$.each(response.response,function(index,value) {
+						if(value.id === response2.response.mobileAPPStoreTypeId) {
+							self.StoreName = value.name;
+						}
+					});
+					editData.data = response2.response;
+					self.editDataStore = response2.response;
+					renderFunction(editData, whereToRender);
+				});   
+			});	
+		}, 
+		
+
+		/***
+		 * Bind the action listeners. The bindUI() is called automatically after the render is complete 
+		 *
+		 */
+		bindUI : function(){
+			var self=this, tabheight;
+			var offset, currentHeight;
+
+			offset = 116;
+			currentHeight = $(window).height();
+
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+				switch(currentHeight) {
+					case 460:
+					case 548: offset = 107; break;
+					case 480:
+					case 568: offset = 127; break;
+					default: offset = 116; break; 
+				}
+			} 
+
+			tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+			$('.create_table_div').css('height',tabheight + 'px'); 
+			
+			$(window).resize(function() {
+				
+				offset = 116;
+				currentHeight = $(window).height();
+
+				if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+					switch(currentHeight) {
+						case 200:
+						case 288: offset = 66; break;
+						case 220:
+						case 308: offset = 86; break;
+						case 460:
+						case 548: offset = 107; break;
+						case 480:
+						case 568: offset = 127; break;
+						default: offset = 116; break; 
+					}
+				} 
+				
+				tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+				$('.create_table_div').css('height',tabheight + 'px'); 
+			});
+			
+			$("#cancel_update").click(function() {
+				
+				// Keyboard Fix for Mobile Devices
+				setTimeout(function(){
+					  window.scrollTo(0, 0);
+				}, 0);
+
+				commonVariables.navListener.getMyObj('data_source', function(retVal) {
+					self.datasource = retVal;							
+					Clazz.navigationController.push(self.datasource, commonVariables.animation);
+				});
+			});
+				
+			
+			$("#datasrcupdate").click(function() {
+
+				// Keyboard Fix for Mobile Devices
+				setTimeout(function(){
+					  window.scrollTo(0, 0);
+				}, 0);
+
+				var obj = $("#edit_name");
+				var descobj = $("#editdesc");
+				var responseType = $("#edittype option:selected").text();
+				var appId = $("#edit_appId");
+				var storeTypeId = $("#storetype option:selected").attr('dynId');
+				if(obj.val() === '') {
+					obj.addClass('errormessage');
+					obj.focus();
+					obj.attr('placeholder','Enter Name');
+					obj.bind('keypress', function() {
+						$(this).removeClass("errormessage");
+						$(this).removeAttr("placeholder");
+					});
+				} else if(appId.val() === '') {
+					appId.addClass('errormessage');
+					appId.focus();
+					appId.attr('placeholder','Enter App Id');
+					appId.bind('keypress', function() {
+						$(this).removeClass("errormessage");
+						$(this).removeAttr("placeholder");
+					});
+				} else {
+					self.postBody = {};
+					self.postBody.name =  obj.val();
+					self.postBody.description =  descobj.val();
+					self.postBody.mobileAPPStoreResponseType =  responseType;
+					self.postBody.mobileAPPStoreTypeId = storeTypeId;
+					self.postBody.appId =  appId.val();
+					self.postBody.id = $("#storetype").attr('dynId');
+					self.datasourceListener.ajaxCall(self.datasourceListener.getRequestHeader(self.postBody, "createdatasource"), function(response) {
+						commonVariables.navListener.getMyObj('data_source', function(retVal) {
+							self.datasource = retVal;							
+							Clazz.navigationController.push(self.datasource, commonVariables.animation);
+						});
+					});	
+				}		
+			});	
+			
+			
+			tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - 116;
+			$('.create_table_div').css('height',tabheight + 'px'); 
+			Clazz.navigationController.jQueryContainer = commonVariables.contentPlaceholder;
+		}
+	});	
+
+	return Clazz.com.components.datasource.js.datasourceedit;
+});

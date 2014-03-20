@@ -1,0 +1,163 @@
+{
+	"environments" : {
+		"envPath" : "src/resource/env-config.xml",
+		"environment" : {
+			"name":"dev",
+			"default" :true
+		},
+		"locales" : "src/locales/en/framework.json"
+	},
+	
+	"navigation" : {
+		"animation" : false,
+		"transitionType" : 13,
+		"cancelTransitionType" : 2,
+		"isNative" : false
+	},
+
+	"components" : {
+		"login" : {
+			"moduleName":"login",
+			"path" : "components/login/js"
+		},
+		
+		"navigation" :{
+			"moduleName":"navigation",
+			"path" : "components/navigation/js"
+		},
+		
+		"navigationTest" :{
+			"moduleName":"navigationTest",
+			"path" : "components/navigation/test/navigationTest"
+		},
+		
+		"loginTest" : {
+			"moduleName":"loginTest",
+			"path" : "components/login/test/loginTest"
+		},
+		
+		"header" :{
+			"moduleName":"header",
+			"path" : "js/commonComponents/modules/header/js"
+		},
+
+		"headerTest" :{
+			"moduleName":"header",
+			"path" : "js/commonComponents/modules/header/test/headerTest"
+		},
+		
+		"charts" :{
+			"moduleName":"charts",
+			"path" : "components/charts/js"
+		},
+		
+		"chartsTest" :{
+			"moduleName":"chartsTest",
+			"path" : "components/charts/test/chartsTest"
+		},
+
+		"revenues" : {
+			"moduleName":"revenues",
+			"path" : "components/revenues/js"
+		},
+		
+		
+		"revenuesTest" :{
+			"moduleName":"revenuesTest",
+			"path" : "components/revenues/test/revenuesTest"
+		},
+
+
+		"tags" : {
+			"moduleName":"tags",
+			"path" : "components/tags/js"
+		},	
+		
+		"tagsTest" :{
+			"moduleName":"tagsTest",
+			"path" : "components/tags/test/tagsTest"
+		},
+		
+		"groups" : {
+			"moduleName":"groups",
+			"path" : "components/groups/js"
+		},	
+		
+		"groupsTest" :{
+			"moduleName":"groupsTest",
+			"path" : "components/groups/test/groupsTest"
+		},
+		
+		"views" : {
+			"moduleName":"views",
+			"path" : "components/views/js"
+		},	
+		
+		"viewsTest" :{
+			"moduleName":"viewsTest",
+			"path" : "components/views/test/viewsTest"
+		},
+		
+		"roles" : {
+			"moduleName":"roles",
+			"path" : "components/roles/js"
+		},	
+		
+		"rolesTest" :{
+			"moduleName":"rolesTest",
+			"path" : "components/roles/test/rolesTest"
+		},
+		
+		"user" : {
+			"moduleName":"user",
+			"path" : "components/user/js"
+		},	
+		
+		"userTest" :{
+			"moduleName":"userTest",
+			"path" : "components/user/test/userTest"
+		},
+			
+		"ratingTrend" : {
+			"moduleName":"ratingTrend",
+			"path" : "components/ratingTrend/js"
+		},
+		
+		"ratingTrendTest" :{
+			"moduleName":"ratingTrendTest",
+			"path" : "components/ratingTrend/test/ratingTrendTest"
+		},
+		
+		"downloadTrend" : {
+			"moduleName":"downloadTrend",
+			"path" : "components/downloadTrend/js"
+		},
+		
+		"downloadTrendTest" :{
+			"moduleName":"downloadTrendTest",
+			"path" : "components/downloadTrend/test/downloadTrendTest"
+		},
+		
+		
+		"dashboard" : {
+			"moduleName":"dashboard",
+			"path" : "components/dashboard/js"
+		},
+		
+		"dashboardTest" :{
+			"moduleName":"dashboardTest",
+			"path" : "components/dashboard/test/dashboardTest"
+		},
+
+		"dataSource" : {
+			"moduleName":"dataSource",
+			"path" : "components/dataSource/js"
+		},
+
+		"dataSourceTest" :{
+			"moduleName":"dataSourceTest",
+			"path" : "components/dataSource/test/dataSourceTest"
+		}
+		
+	}
+}

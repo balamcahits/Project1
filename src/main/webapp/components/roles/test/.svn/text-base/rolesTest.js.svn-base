@@ -1,0 +1,186 @@
+define([ "roles/roles"], function(Roles) {
+	/**
+	 * Test that the setMainContent method sets the text in the MyCart-widget
+	 */
+	return { 
+		runTests : function () {
+			module("roles.js");
+			var roles = new Roles(), self = this;
+			asyncTest("roles UI Test", function() {
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"roles;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify([{"id":"52fc5f7106cb0ada3321ce06","name":"Admin Role","description":null,"permissions":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55caec","52fc5b7206cb8add3f55caf0","52fc5b7206cb8add3f55caf4","52fc5b7206cb8add3f55caf8"],"role":"ROLE_ADMIN"},{"id":"52fc5f7106cb0ada3321ce07","name":"User Role","description":null,"permissions":["52fc5b7206cb8add3f55caeb","52fc5b7206cb8add3f55caef","52fc5b7206cb8add3f55caf3","52fc5b7206cb8add3f55caf7","ROLE_VIEW_DASHBOARD","52fc5b7206cb8add3f55caf9","52fc5b7206cb8add3f55cafa"],"role":"ROLE_USER"}]);
+				   }
+				});
+			
+				$("#adminLi > li > a#roles").click();
+				setTimeout(function() {
+					start();
+					var out = $('.right_content:last').find('.bread_crumb').children().eq(1).text();
+					equal(' Roles', out, "roles Page Rendered successfully");
+					self.rolesCreatePageUITest();
+				}, 2500);
+			});
+		},
+		
+		rolesCreatePageUITest : function() {
+			var self=this;
+			asyncTest("Roles Create Page UI Test", function() {
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"permission;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify({"response":[{"id":"52fc5b7206cb8add3f55cae8","name":"Manage DataSource","authority":"ROLE_MANAGE_DATASOURCE"},{"id":"52fc5b7206cb8add3f55cae9","name":"Create DataSource","authority":"ROLE_CREATE_DATASOURCE"},{"id":"52fc5b7206cb8add3f55caea","name":"Edit DataSource","authority":"ROLE_EDIT_DATASOURCE"},{"id":"52fc5b7206cb8add3f55caeb","name":"View DataSource","authority":"ROLE_VIEW_DATASOURCE"},{"id":"52fc5b7206cb8add3f55caec","name":"Manage User","authority":"ROLE_MANAGE_USER"},{"id":"52fc5b7206cb8add3f55caed","name":"Create User","authority":"ROLE_CREATE_USER"},{"id":"52fc5b7206cb8add3f55caee","name":"Edit User","authority":"ROLE_EDIT_USER"},{"id":"52fc5b7206cb8add3f55caef","name":"View User","authority":"ROLE_VIEW_USER"},{"id":"52fc5b7206cb8add3f55caf0","name":"Manage Role","authority":"ROLE_MANAGE_ROLE"},{"id":"52fc5b7206cb8add3f55caf1","name":"Create Role","authority":"ROLE_CREATE_ROLE"},{"id":"52fc5b7206cb8add3f55caf2","name":"Edit Role","authority":"ROLE_EDIT_ROLE"},{"id":"52fc5b7206cb8add3f55caf3","name":"View Role","authority":"ROLE_VIEW_ROLE"},{"id":"52fc5b7206cb8add3f55caf4","name":"Manage Group","authority":"ROLE_MANAGE_GROUP"},{"id":"52fc5b7206cb8add3f55caf5","name":"Create Group","authority":"ROLE_CREATE_GROUP"},{"id":"52fc5b7206cb8add3f55caf6","name":"Edit Group","authority":"ROLE_EDIT_GROUP"},{"id":"52fc5b7206cb8add3f55caf7","name":"View Group","authority":"ROLE_VIEW_GROUP"},{"id":"52fc5b7206cb8add3f55caf8","name":"Manage Dashboard","authority":"ROLE_MANAGE_DASHBOARD"},{"id":"52fc5b7206cb8add3f55caf9","name":"Create Dashboard","authority":"ROLE_CREATE_DASHBOARD"},{"id":"52fc5b7206cb8add3f55cafa","name":"Edit Dashboard","authority":"ROLE_EDIT_DASHBOARD"},{"id":"52fc5b7206cb8add3f55cafb","name":"View Dashboard","authority":"ROLE_VIEW_DASHBOARD"}],"responseStatus":200,"responseCode":"phr900001","exception":null,"message":null});
+				   }
+				});
+				
+				$("#rolescreate").click();
+				setTimeout(function() {
+					start();
+					var out = $('#rolename').attr('id');
+					equal('rolename', out, "Roles Create Page Rendering Tested successfully");
+					self.rolesNameValidationTest();
+				}, 1500);
+			});
+		},
+		
+		rolesNameValidationTest : function() {
+			var self=this;
+			asyncTest("Roles Create Page Name Validation Test", function() {
+				$("#rolename").val('');
+				$("#rolecreate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#rolename").attr('class');
+					equal('form-control errormessage', out, "Roles Create Page Name Validation Tested successfully");
+					self.rolesCreateTest();
+				},1500);
+			});
+		},
+		
+		rolesCreateTest : function() {
+			var self = this;
+			$.mockjax({
+			   url: commonVariables.webserviceurl+"roles;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+			   type: "POST",
+			   dataType: "json",
+			   contentType: "application/json",
+			   status: 200,
+			   response : function() {
+				  this.responseText = JSON.stringify({"id":"53059c569be56e41789ebf0b","name":"Sample Role","description":null,"permissions":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55cae9","52fc5b7206cb8add3f55caea","52fc5b7206cb8add3f55caeb"],"role":null});
+			   }
+			});
+			
+			asyncTest("Roles Create Test", function() {
+				$("#rolename").val('SampleRole');		
+				$("#rolecreate").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "Roles Create Tested successfully");
+					self.rolesCreateCancelTest();
+				},1500);
+			});
+		},
+		
+		rolesCreateCancelTest : function() {
+			var self = this;
+			asyncTest("Roles Create Cancel Test", function() {	
+				$("#rolescreate").click();
+				$("#cancel_roles").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "Roles Create Tested successfully");
+					self.rolesEditTest();
+				},1500);		
+			});
+		},
+		
+		rolesEditTest : function() {
+			var self = this;
+			asyncTest("Roles Edit Test", function() {
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"roles/52fc5f7106cb0ada3321ce06;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify();
+				   }
+				});
+				
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"permission;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify({"response":[{"id":"52fc5b7206cb8add3f55cae8","name":"Manage DataSource","authority":"ROLE_MANAGE_DATASOURCE"},{"id":"52fc5b7206cb8add3f55cae9","name":"Create DataSource","authority":"ROLE_CREATE_DATASOURCE"},{"id":"52fc5b7206cb8add3f55caea","name":"Edit DataSource","authority":"ROLE_EDIT_DATASOURCE"},{"id":"52fc5b7206cb8add3f55caeb","name":"View DataSource","authority":"ROLE_VIEW_DATASOURCE"},{"id":"52fc5b7206cb8add3f55caec","name":"Manage User","authority":"ROLE_MANAGE_USER"},{"id":"52fc5b7206cb8add3f55caed","name":"Create User","authority":"ROLE_CREATE_USER"},{"id":"52fc5b7206cb8add3f55caee","name":"Edit User","authority":"ROLE_EDIT_USER"},{"id":"52fc5b7206cb8add3f55caef","name":"View User","authority":"ROLE_VIEW_USER"},{"id":"52fc5b7206cb8add3f55caf0","name":"Manage Role","authority":"ROLE_MANAGE_ROLE"},{"id":"52fc5b7206cb8add3f55caf1","name":"Create Role","authority":"ROLE_CREATE_ROLE"},{"id":"52fc5b7206cb8add3f55caf2","name":"Edit Role","authority":"ROLE_EDIT_ROLE"},{"id":"52fc5b7206cb8add3f55caf3","name":"View Role","authority":"ROLE_VIEW_ROLE"},{"id":"52fc5b7206cb8add3f55caf4","name":"Manage Group","authority":"ROLE_MANAGE_GROUP"},{"id":"52fc5b7206cb8add3f55caf5","name":"Create Group","authority":"ROLE_CREATE_GROUP"},{"id":"52fc5b7206cb8add3f55caf6","name":"Edit Group","authority":"ROLE_EDIT_GROUP"},{"id":"52fc5b7206cb8add3f55caf7","name":"View Group","authority":"ROLE_VIEW_GROUP"},{"id":"52fc5b7206cb8add3f55caf8","name":"Manage Dashboard","authority":"ROLE_MANAGE_DASHBOARD"},{"id":"52fc5b7206cb8add3f55caf9","name":"Create Dashboard","authority":"ROLE_CREATE_DASHBOARD"},{"id":"52fc5b7206cb8add3f55cafa","name":"Edit Dashboard","authority":"ROLE_EDIT_DASHBOARD"},{"id":"52fc5b7206cb8add3f55cafb","name":"View Dashboard","authority":"ROLE_VIEW_DASHBOARD"}],"responseStatus":200,"responseCode":"phr900001","exception":null,"message":null});
+				   }
+				});
+				
+				$("#example tbody > tr").eq(0).click();
+				$("#rolesedit").click();
+				setTimeout(function() {
+					start();
+					var out = $("#rolename").val();
+					equal('SampleRole', out, "Roles Edit Tested successfully");
+					self.rolesEditNameValidationTest();
+				},1500);
+			});
+		},
+		
+		rolesEditNameValidationTest : function() {
+			var self = this;
+			asyncTest("Roles Edit Name Validation Test", function() {				
+				$("#rolename").val('');		
+				$("#roleupdate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#rolename").attr('class');
+					equal('form-control errormessage', out, "Roles Edit Name Validation Tested successfully");
+					self.rolesUpdateTest();
+				},1500);
+			});
+		},
+		
+		rolesUpdateTest : function() {
+			var self = this;
+			$.mockjax({
+			   url: commonVariables.webserviceurl+"roles;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+			   type: "POST",
+			   dataType: "json",
+			   contentType: "application/json",
+			   status: 200,
+			   response : function() {
+				  this.responseText = JSON.stringify({"id":"53059c569be56e41789ebf0b","name":"Sample Role","description":null,"permissions":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55cae9","52fc5b7206cb8add3f55caea","52fc5b7206cb8add3f55caeb"],"role":null});
+			   }
+			});
+			
+			asyncTest("Roles Update Test", function() {
+				$("#rolename").val('SampleRole');		
+				$("#roleupdate").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "Roles Update Tested successfully");
+					require(["groupsTest"], function(groupsTest){
+						groupsTest.runTests();
+					});
+				},1500);
+			});
+		}
+		
+	};
+});

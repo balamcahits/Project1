@@ -1,0 +1,72 @@
+[
+  {
+    "id": "admin",
+    "name": "Admin",
+    "firstName": "Admin",
+    "lastName": null,
+    "emailId": "admin@gmail.com",
+    "roles": [
+      "create"
+    ]
+  },
+  {
+    "id": "demouser",
+    "name": "DemoUser",
+    "firstName": "DemoUser",
+    "lastName": null,
+    "emailId": "demouser@gmail.com",
+    "roles": [
+      "create"
+    ]
+  },
+  {
+    "id": "string",
+    "name": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "emailId": "string",
+    "roles": [
+      "string"
+    ]
+  },
+  {
+    "id": "admin",
+    "name": "Admin",
+    "firstName": "Admin",
+    "lastName": null,
+    "emailId": "admin@gmail.com",
+    "roles": [
+      "create"
+    ]
+  },
+  {
+    "id": "demouser",
+    "name": "DemoUser",
+    "firstName": "DemoUser",
+    "lastName": null,
+    "emailId": "demouser@gmail.com",
+    "roles": [
+      "create"
+    ]
+  },
+  {
+    "id": "admin",
+    "name": "Admin",
+    "firstName": "Admin",
+    "lastName": null,
+    "emailId": "admin@gmail.com",
+    "roles": [
+      "create"
+    ]
+  },
+  {
+    "id": "demouser",
+    "name": "DemoUser",
+    "firstName": "DemoUser",
+    "lastName": null,
+    "emailId": "demouser@gmail.com",
+    "roles": [
+      "create"
+    ]
+  }
+]

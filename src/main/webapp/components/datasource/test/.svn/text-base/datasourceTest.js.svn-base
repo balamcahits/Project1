@@ -1,0 +1,214 @@
+define([ "dataSource/dataSource"], function(DataSource) {
+	/**
+	 * Test that the setMainContent method sets the text in the MyCart-widget
+	 */
+	return { 
+		runTests : function () {
+			module("dataSource.js");
+			var dataSource = new DataSource(), self = this, datasource, datasourceType;
+			asyncTest("dataSource UI Test", function() {				
+				
+				 self.datasource = $.mockjax({
+				   url: commonVariables.webserviceurl+"datasource;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify({"response":[{"id":"52ff66fe84bcc88c427194fd","name":"Walgreens Itunes Application","appId":"335364882","description":"Walgreens Itunes Application","mobileAPPStoreResponseType":"JSON","mobileAPPStoreTypeId":"1234","taskletClassName":null,"ownerId":null},{"id":"52ff69bb84bcc88c42719504","name":"Walgreens PlayStore Application","appId":"com.usablenet.mobile.walgreen","description":"Walgreens PlayStore Application","mobileAPPStoreResponseType":"JSON","mobileAPPStoreTypeId":"123456","taskletClassName":null,"ownerId":null},{"id":"52ff6bf484bcc88c42719508","name":"Walgreens Windows Application","appId":"cddff7ed-a876-e011-9210-002264c2fb72","description":"Walgreens Windows Application","mobileAPPStoreResponseType":"JSON","mobileAPPStoreTypeId":"12344","taskletClassName":null,"ownerId":null},{"id":"5304591c9be59741aadd51c5","name":"Test","appId":"1234","description":"","mobileAPPStoreResponseType":"JSON","mobileAPPStoreTypeId":"1234","taskletClassName":null,"ownerId":null}],"responseStatus":200,"responseCode":"phr300001","exception":null,"message":null});
+				   }
+				});
+				 
+				self.datasourceType = $.mockjax({
+				   url: commonVariables.webserviceurl+"datasourcetype;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify({"response":[{"id":"1234","name":"ITUNES","taskletClassName":"com.photon.phresco.app.store.batch.job.ITunesTasklet","url":"http://itunes.apple.com/rss/customerreviews/id=%s/xml"},{"id":"123456","name":"Play Store","taskletClassName":"com.photon.phresco.app.store.batch.job.PlaystoreTasklet","url":"https://play.google.com/store/apps/details?id=%s"},{"id":"12344","name":"Windows","taskletClassName":"com.photon.phresco.app.store.batch.job.WindowsTasklet","url":"http://www.windowsphone.com/en-us/store/app/walgreens/%s/reviews"}],"responseStatus":200,"responseCode":"phr200001","exception":null,"message":null});
+				   }
+				}); 
+			
+				$("#adminLi > li > a#data_source").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "dataSource Page Rendered successfully");
+					self.datasourcecreaterender();					
+				},4000);		
+			});
+		},
+		
+		datasourcecreaterender : function() {
+			var self = this;
+			asyncTest("dataSourceCreate UI Test", function() {				
+				$("#datasrccreate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#datasrcname").attr('id');
+					equal('datasrcname', out, "dataSourceCreate Page Rendered successfully");
+					self.dataSourceNameValidationTest();
+				},4000);		
+			});
+		},
+		
+		dataSourceNameValidationTest : function() {
+			var self = this;
+			asyncTest("dataSourceCreate Name Validation Test", function() {				
+				$("#datasrcname").val('');		
+				$("#datasrccreate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#datasrcname").attr('class');
+					equal('form-control errormessage', out, "DataSource Name Validation Tested successfully");
+					self.dataSourceAppIdValidationTest();
+				},1500);
+			});
+		},
+		
+		dataSourceAppIdValidationTest : function() {
+			var self = this;
+			asyncTest("dataSource AppIdValidation Test", function() {
+				$("#datasrcname").val('Test');	
+				$("#appId").val('');
+				$("#datasrccreate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#appId").attr('class');
+					equal('form-control errormessage', out, "DataSource AppId Validation Tested successfully");
+					self.dataSourceCreateTest();
+				},1500);
+			});
+		},
+		
+		dataSourceCreateTest : function() {
+			var self = this;
+			$.mockjax({
+			   url: commonVariables.webserviceurl+"datasource;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+			   type: "POST",
+			   dataType: "json",
+			   contentType: "application/json",
+			   status: 200,
+			   response : function() {
+				  this.responseText = JSON.stringify({"response":null,"responseStatus":201,"responseCode":"phr300003","exception":null,"message":null});
+			   }
+			});
+			
+			asyncTest("dataSource Create Test", function() {
+				$("#datasrccreate").click();
+				$("#datasrcname").val('Test');
+				$("#datasrcdesc").val('Description');
+				$("#datasrctype option:selected").text('JSON');
+				$("#appId").val('12345');
+				$("#storetype option:selected").attr('id');
+				$("#datasrccreate").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "dataSource Create Tested successfully");
+					self.datasourcecancelTest();
+				},1500);
+			});
+		},
+		
+		datasourcecancelTest : function() {
+			var self = this;
+			asyncTest("dataSource Cancel Test", function() {				
+				$("#cancel_create").click();
+				setTimeout(function() {
+					start();
+					var out = $("#datasrcname").attr('id');
+					equal('datasrcname', out, "dataSourceCreate cancel Tested successfully");
+					self.datasourceeditTest();
+				},1500);		
+			});
+		},
+		
+		datasourceeditTest : function() {
+			var self = this;
+			$.mockjax({
+			   url: commonVariables.webserviceurl+"datasource/5304591c9be59741aadd51c5;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+			   type: "GET",
+			   dataType: "json",
+			   contentType: "application/json",
+			   status: 200,
+			   response : function() {
+				  this.responseText = JSON.stringify({"response":{"id":"5304903b9be52cfde3a9aeaf","name":"asd","appId":"12312","description":"asd","mobileAPPStoreResponseType":"JSON","mobileAPPStoreTypeId":"1234","taskletClassName":null,"ownerId":null},"responseStatus":200,"responseCode":"phr210002","exception":null,"message":null});
+			   }
+			});
+			
+			asyncTest("dataSource Edit Test", function() {
+				$("#example tbody > tr").eq(0).click();
+				$("#datasrcedit").click();
+				setTimeout(function() {
+					start();
+					var out = $("#edit_name").val();
+					equal('asd', out, "dataSourceCreate Edit Tested successfully");
+					self.datasourceeditnamevalidationTest();
+				},4000);
+			});
+		},
+		
+		datasourceeditnamevalidationTest : function() {
+			var self = this;
+			asyncTest("dataSourceEdit Name Validation Test", function() {				
+				$("#edit_name").val('');		
+				$("#datasrcupdate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#edit_name").attr('class');
+					equal('form-control errormessage', out, "DataSource Edit Name Validation Tested successfully");
+					self.dataSourceEditAppIdValidationTest();
+				},2000);
+			});
+		},
+		
+		dataSourceEditAppIdValidationTest : function() {
+			var self = this;
+			asyncTest("dataSourceEdit AppId Validation Test", function() {				
+				$("#edit_name").val('asd');		
+				$("#edit_appId").val('');
+				$("#datasrcupdate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#edit_appId").attr('class');
+					equal('form-control errormessage', out, "DataSource Name Validation Tested successfully");
+					self.dataSourceUpdateTest();
+				},1500);
+			});
+		},
+		
+		dataSourceUpdateTest : function() {
+			
+			$.mockjax({
+			   url: commonVariables.webserviceurl+"datasource;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+			   type: "POST",
+			   dataType: "json",
+			   contentType: "application/json",
+			   status: 200,
+			   response : function() {
+				  this.responseText = JSON.stringify({"response":null,"responseStatus":201,"responseCode":"phr300003","exception":null,"message":null});
+			   }
+			});
+			
+			asyncTest("dataSource Update Validation Test", function() {				
+				$("#edit_name").val('Test');		
+				$("#editdesc").val('Description');
+				$("#edittype option:selected").text('JSON');
+				$("#edit_appId").val('12345');
+				$("#storetype option:selected").attr('dynId');
+				$("#datasrcupdate").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "dataSource Update Tested successfully");
+					require(["userTest"], function(userTest){
+						userTest.runTests();
+					});
+				},1500);
+			});
+		}
+			
+	};
+});

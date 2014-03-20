@@ -1,0 +1,27 @@
+<div id="container">
+        <section class="right_content">
+                    <div class="breadcrumb_div">
+                        <div class="bread_crumb"><div class="mob_hidden">Home <span>>&nbsp </span>Admin <span>> &nbsp </span></div><span> Groups</span></div>
+                    </div>
+                  	<div class="table_div">
+						<div class="DTTT btn-group"><a href="#" id="groupscreate" data-original-title="Create" class="tooltips btn_style create_datatable_btn" data-toggle="tooltip" data-placement="bottom" title=""></a><a href="#" disabled id="groupsedit" data-original-title="Edit" class="tooltips btn_style edit_icon_btn todisable1" data-toggle="tooltip" data-placement="bottom" title=""></a><a data-original-title="Delete" href="#" id="bootstrap" class="tooltips btn_style delete_icon_btn todisable2" data-toggle="tooltip" data-placement="bottom" title="" disabled></a></div>
+                    	<table aria-describedby="example_info" class="table table-striped table-bordered dataTable" id="example" border="0" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr role="row">
+                                <th aria-sort="ascending" style="width: 166px;" aria-controls="example" role="columnheader" class="sorting_asc"><span data-i18n="commonlabel.label.name"></span></th>
+                                <th style="width: 220px;" aria-controls="example" role="columnheader" class="sorting"><span data-i18n="commonlabel.label.description"></span></th>                               
+                           </tr>
+                    </thead>
+					<tbody aria-relevant="all" aria-live="polite" role="alert">
+                    	{{#each userlist}}
+	                    <tr class="gradeA odd" id="{{id}}">
+	                        <td class="  sorting_1">{{name}}</td>
+	                        <td class=" ">{{description}}</td>
+	                    </tr>
+                    	{{/each}}
+                    </tbody>
+               </table>
+                    </div>
+            <!--main-content div ends -->
+        </section>
+</div>

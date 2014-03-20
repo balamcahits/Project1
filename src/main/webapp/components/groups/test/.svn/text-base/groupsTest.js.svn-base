@@ -1,0 +1,186 @@
+define([ "groups/groups"], function(Groups) {
+	/**
+	 * Test that the setMainContent method sets the text in the MyCart-widget
+	 */
+	return { 
+		runTests : function (configData) {
+			module("groups.js");
+			var self = this;
+			
+			asyncTest("groups UI Test", function() {
+				
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"usergroup;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify({"response":[{"id":"53032daebfac33634f9fd683","name":"b","users":["52fc602c06cbed469944d659"],"roles":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55cae9"]},{"id":"53035849bfaca65ba8e07bd6","name":"456","users":["5302eded9be54d58c51ebf6c"],"roles":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55cae9"]},{"id":"53035e0cbfaca65ba8e07bd7","name":"All Permission Group","users":["5302eded9be54d58c51ebf6c","52fc602c06cbed469944d659"],"roles":["52fc5b7206cb8add3f55caed"]},{"id":"53035eacbfaca65ba8e07bd8","name":"123451","users":["52fc602c06cbed469944d659","5302eded9be54d58c51ebf6c"],"roles":["52fc5b7206cb8add3f55caf7","52fc5b7206cb8add3f55caf8","52fc5b7206cb8add3f55caf6"]},{"id":"53044981bfac1be685ce5686","name":"groupppppp","users":["5302eded9be54d58c51ebf6c"],"roles":["52fc5f7106cb0ada3321ce06","52fc5f7106cb0ada3321ce07"]}],"responseStatus":200,"responseCode":"phru00001","exception":null,"message":null});
+				   }
+				});
+				
+				$("#adminLi > li > a#groups").click();
+				setTimeout(function() {
+					start();
+					var out = $('.breadcrumb_div').attr('class');
+					equal('breadcrumb_div', out, "groups Page Rendered successfully");
+					self.groupscreatetest();
+				}, 1500);
+			});
+		},
+		
+		groupscreatetest : function() {
+			var self=this;
+			asyncTest("Groups Create Page UI Test", function() {
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"users;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify({"response":[{"id":"52fc602c06cbed469944d659","name":"Admin","firstName":null,"lastName":null,"emailId":"admin@gmail.com","password":"21232f297a57a5a743894a0e4a801fc3","profilePicture":null,"authorities":null,"authToken":null,"accountNonExpired":false,"accountNonLocked":false,"credentialsNonExpired":false,"enabled":false,"roles":["52fc5f7106cb0ada3321ce06"],"imageStream":"","username":"Admin"},{"id":"5302eded9be54d58c51ebf6c","name":null,"firstName":"Mohamed","lastName":"Ibrahim","emailId":"demouser@gmail.com","password":null,"profilePicture":null,"authorities":null,"authToken":null,"accountNonExpired":false,"accountNonLocked":false,"credentialsNonExpired":false,"enabled":false,"roles":["52fc5f7106cb0ada3321ce07"],"imageStream":"","username":null}],"responseStatus":200,"responseCode":"phr400001","exception":null,"message":null});
+				   }
+				});
+				
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"roles;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify([{"id":"52fc5f7106cb0ada3321ce06","name":"Admin Role","description":null,"permissions":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55caec","52fc5b7206cb8add3f55caf0","52fc5b7206cb8add3f55caf4","52fc5b7206cb8add3f55caf8"],"role":"ROLE_ADMIN"},{"id":"52fc5f7106cb0ada3321ce07","name":"User Role","description":null,"permissions":["52fc5b7206cb8add3f55caeb","52fc5b7206cb8add3f55caef","52fc5b7206cb8add3f55caf3","52fc5b7206cb8add3f55caf7","ROLE_VIEW_DASHBOARD","52fc5b7206cb8add3f55caf9","52fc5b7206cb8add3f55cafa"],"role":"ROLE_USER"},{"id":"5305997b9be56e41789ebf0a","name":"Sample Role","description":null,"permissions":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55cae9","52fc5b7206cb8add3f55caea","52fc5b7206cb8add3f55caeb","52fc5b7206cb8add3f55caec","52fc5b7206cb8add3f55caed","52fc5b7206cb8add3f55caee","52fc5b7206cb8add3f55caef","52fc5b7206cb8add3f55caf0","52fc5b7206cb8add3f55caf1"],"role":null},{"id":"53059c569be56e41789ebf0b","name":"Sample Role","description":null,"permissions":["52fc5b7206cb8add3f55cae8","52fc5b7206cb8add3f55cae9","52fc5b7206cb8add3f55caea","52fc5b7206cb8add3f55caeb"],"role":null}]);
+				   }
+				});
+				
+				$("#groupscreate").click();
+				setTimeout(function() {
+					start();
+					var out = $('#groupname').attr('id');
+					equal('groupname', out, "Groups Create Page Rendering Tested successfully");
+					self.groupNameValidationTest();
+				}, 1500);
+			});
+		},
+		
+		groupNameValidationTest : function() {
+			var self=this;
+			asyncTest("Groups Create Page Name Validation Test", function() {
+				$("#groupname").val('');
+				$("#groupscreate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#groupname").attr('class');
+					equal('form-control errormessage', out, "Roles Create Page Name Validation Tested successfully");
+					self.groupsCreateTest();
+				},1500);
+			});
+		},
+		
+		groupsCreateTest : function() {
+			var self = this;
+			$.mockjax({
+			   url: commonVariables.webserviceurl+"usergroup;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+			   type: "POST",
+			   dataType: "json",
+			   contentType: "application/json",
+			   status: 200,
+			   response : function() {
+				  this.responseText = JSON.stringify({"response":{"id":"5305d1e09be56e41789ebf0c","name":"Sample","users":["5302eded9be54d58c51ebf6c"],"roles":["52fc5f7106cb0ada3321ce06"]},"responseStatus":201,"responseCode":"phru00002","exception":null,"message":null});
+			   }
+			});
+			
+			asyncTest("Groups Create Test", function() {
+				$("#groupname").val('Sample');		
+				$("#groupscreate").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "Groups Create Tested successfully");
+					self.groupscreatecanceltest();
+				},1500);
+			});
+		},
+		
+		groupscreatecanceltest : function() {
+			var self = this;
+			asyncTest("Groups Create Cancel Test", function() {	
+				$("#groupscreate").click();
+				$("#cancel_groups").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "Groups Create Cancel Tested successfully");
+					self.groupsEditTest();
+				},1500);		
+			});
+		},
+		
+		groupsEditTest : function() {
+			var self = this;
+			asyncTest("Groups Edit Test", function() {
+				$.mockjax({
+				   url: commonVariables.webserviceurl+"usergroup/53035eacbfaca65ba8e07bd8;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+				   type: "GET",
+				   dataType: "json",
+				   contentType: "application/json",
+				   status: 200,
+				   response : function() {
+					  this.responseText = JSON.stringify({"response":{"id":"53035eacbfaca65ba8e07bd8","name":"123451","users":["52fc602c06cbed469944d659","5302eded9be54d58c51ebf6c"],"roles":["52fc5b7206cb8add3f55caf7","52fc5b7206cb8add3f55caf8","52fc5b7206cb8add3f55caf6"]},"responseStatus":200,"responseCode":"phru00001","exception":null,"message":null});
+				   }
+				});
+				
+				$("#example tbody > tr").eq(0).click();
+				$("#groupsedit").click();
+				setTimeout(function() {
+					start();
+					var out = $("#groupname").val();
+					equal('Sample', out, "Groups Edit Tested successfully");
+					self.groupsEditNameValidationTest();
+				},1500);
+			});
+		},
+		
+		groupsEditNameValidationTest : function() {
+			var self = this;
+			asyncTest("Groups Edit Name Validation Test", function() {				
+				$("#groupname").val('');		
+				$("#groupsupdate").click();
+				setTimeout(function() {
+					start();
+					var out = $("#groupname").attr('class');
+					equal('form-control errormessage', out, "Groups Edit Name Validation Tested successfully");
+					self.groupsUpdateTest();
+				},1500);
+			});
+		},
+		
+		groupsUpdateTest : function() {
+			$.mockjax({
+			   url: commonVariables.webserviceurl+"usergroup;jsessionid=4FACB7C1DC4A30108D803EDCF4443A43",
+			   type: "POST",
+			   dataType: "json",
+			   contentType: "application/json",
+			   status: 200,
+			   response : function() {
+				  this.responseText = JSON.stringify({"response":{"id":"53035eacbfaca65ba8e07bd8","name":"123451","users":["5302eded9be54d58c51ebf6c"],"roles":[]},"responseStatus":201,"responseCode":"phru00002","exception":null,"message":null});
+			   }
+			});
+			
+			asyncTest("Groups Update Test", function() {
+				$("#rolename").val('123451');		
+				$("#groupsupdate").click();
+				setTimeout(function() {
+					start();
+					var out = $(".breadcrumb_div").attr('class');
+					equal('breadcrumb_div', out, "Roles Update Tested successfully");
+					require(["viewsTest"], function(viewsTest){
+						viewsTest.runTests();
+					});
+				},1500);
+			});
+		}
+	};
+});

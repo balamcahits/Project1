@@ -1,0 +1,29 @@
+<section class="main_content">
+	<section class="left_navigation">
+			<nav id="page-leftbar" role="navigation">
+					<!-- BEGIN SIDEBAR MENU -->
+				<ul style="overflow: visible;" class="acc-menu" id="sidebar">
+					<li class="" id="search">
+						<a href="javascript:;"><img src="themes/images/search_icon.png" class="search_icon"></a>
+						 <form>
+							<input type="text" class="search-query" placeholder="Search" maxlength="30">
+						</form>
+					</li>
+					<li class="home_icon"><a name="DASHBOARD" id="dashboard" href="javascript:;"><span class="list_image"></span><span class="list_text"><span data-i18n="navigation.dashboard"></span></span> </a></li>
+					<!-- <li class="review_icon"><a id="revenues" href="javascript:;"><span class="list_image"></span><span class="list_text"><span data-i18n="navigation.revenues"></span></span></a></li> -->
+					<li class="rating_icon"><a name="RATING TREND" id="ratingTrend" href="javascript:;"><span class="list_image"></span><span class="list_text"><span data-i18n="navigation.ratingTrend"></span></span></a></li>
+					<li class="download_icon"><a name="DOWNLOAD TRENDS" id="downloadTrend" href="javascript:;"><span class="list_image"></span><span class="list_text"><span data-i18n="navigation.downloadTrend"></span></span></a></li>
+					<li class="cloud_icon"><a name="tagCloud" id="tagCloud" href="javascript:;"><span class="list_image"></span><span class="list_text"><span data-i18n="navigation.tagCloud"></span></span></a></li>
+					<li class="hasChild admin_icon"><a id="admin" href="javascript:;"><span class="list_image"></span><span class="list_text"><span data-i18n="navigation.admin"></span></span><span class="arrow_close"></span></a>
+						<ul id="adminLi" style="" class="acc-menu">
+							<li><a name="data_source" id="data_source" href="javascript:;"><span><span data-i18n="navigation.datasource"></span></span></a></li>							
+							<li><a name="user" id="user" href="javascript:;"><span><span data-i18n="navigation.user"></span></span></a></li>
+							<li><a name="roles" id="roles" href="javascript:;"><span><span data-i18n="navigation.roles"></span></span></a></li>
+							<li><a name="groups" id="groups" href="javascript:;"><span><span data-i18n="navigation.groups"></span></span></a></li>
+							<li><a name="views" id="views" href="javascript:;"><span><span data-i18n="navigation.views"></span></span></a></li>
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</nav>
+	</section>

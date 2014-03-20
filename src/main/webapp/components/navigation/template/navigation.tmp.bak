@@ -1,0 +1,29 @@
+<section class="main_content">
+	<section class="left_navigation">
+			<nav id="page-leftbar" role="navigation">
+					<!-- BEGIN SIDEBAR MENU -->
+				<ul style="overflow: visible;" class="acc-menu" id="sidebar">
+					<li class="" id="search">
+						<a href="javascript:;"><img src="themes/images/search_icon.png" class="search_icon"></a>
+						 <form>
+							<input type="text" class="search-query" placeholder="Search" maxlength="30">
+						</form>
+					</li>
+					<li class="home_icon"><a id="dashboard" class="active" href="javascript:;"><span>DASHBOARD</span> </a></li>
+					<li class="review_icon"><a href="javascript:;"><span>REVENUES</span></a></li>
+					<li class="rating_icon"><a href="javascript:;"><span>RATING TREND</span></a></li>
+					<li class="download_icon"><a href="javascript:;"><span>DOWNLOAD TREND</span></a></li>
+					<li class="cloud_icon"><a href="javascript:;"><span>TAG CLOUD</span></a></li>
+					<li class="hasChild admin_icon"><a href="javascript:;"><span>ADMIN</span><p class="arrow_close"></p></a>
+						<ul style="" class="acc-menu">
+							<li><a id="data_source" href="javascript:;"><span>Data Source</span></a></li>
+							<li><a href="javascript:;"><span>Tags</span></a></li>
+							<li><a href="javascript:;"><span>User</span></a></li>
+							<li><a href="javascript:;"><span>Roles</span></a></li>
+							<li><a href="javascript:;"><span>Groups</span></a></li>
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</nav>
+	</section>

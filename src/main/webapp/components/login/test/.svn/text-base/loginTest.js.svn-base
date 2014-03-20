@@ -1,0 +1,92 @@
+define(["login/login"], function(Login) {
+	/**
+	 * Test that the setMainContent method sets the text in the MyCart-widget
+	 */
+	return { 
+		runTests : function (configData) {
+			module("login.js");
+			var login = new Login(), self = this;
+			
+			asyncTest("Login UI Test", function() {
+				$("#custom").append(commonVariables.basePlaceholder);
+				$("#custom").append(commonVariables.headerPlaceholder);
+				$("#custom").append(commonVariables.navigationPlaceholder);
+				$("#fixture").append(commonVariables.contentPlaceholder);
+
+				var output;
+				Clazz.config = configData;
+				Clazz.navigationController = new Clazz.NavigationController({
+					mainContainer : "basepage\\:widget",
+					transitionType : Clazz.config.navigation.transitionType,
+					isNative : Clazz.config.navigation.isNative
+				});
+
+				login.loadPage();
+				setTimeout(function() {
+					start();
+					output = $(commonVariables.basePlaceholder).find(".login_user").parent().attr('class');
+					equal("col-sm-8", output, "Login Rendered Successfully");
+					self.loginUserNameValidationTest();
+				}, 1000);
+			});
+		},
+		
+		loginUserNameValidationTest : function() {
+			var self=this;
+			asyncTest("Login Username Validation Test", function() {
+				$("input#username").val('');
+				$('input#password').val('');
+				$('#login').click();
+				setTimeout(function() {
+					start();
+					var out = $("#username").attr('class');
+					equal('errormessage', out, "Login Username Validation Tested");
+					self.loginPasswordValidationTest();
+				},1000);
+			});
+		},
+		
+		loginPasswordValidationTest : function() {
+			var self=this;
+			asyncTest("Login Password Validation Test", function() {
+				$("input#username").val('a@gmail.com');
+				$("input#password").val('');
+				$('#login').click();
+				setTimeout(function() {
+					start();
+					var out = $("#password").attr('class');
+					equal('errormessage', out, "Login Password Validation Tested");
+					self.loginClick();
+				},1000);
+			});
+		},
+		
+		loginClick : function() {
+			
+			$.mockjax({
+			  url: commonVariables.webserviceurl+"j_spring_security_check?j_username=admin@gmail.com&j_password=21232f297a57a5a743894a0e4a801fc3",
+			  type: "POST",
+			  dataType: "json",
+			  contentType: "application/json",
+			  status: 200,
+			  response : function() {
+				  this.responseText = JSON.stringify({"emailId":"admin@gmail.com","password":"21232f297a57a5a743894a0e4a801fc3","authorities":[{"authority":"ROLE_MANAGE_GROUP","id":"52fc5b7206cb8add3f55caf4","name":"Manage Group"},{"authority":"ROLE_MANAGE_DATASOURCE","id":"52fc5b7206cb8add3f55cae8","name":"Manage DataSource"},{"authority":"ROLE_MANAGE_DASHBOARD","id":"52fc5b7206cb8add3f55caf8","name":"Manage Dashboard"},{"authority":"ROLE_MANAGE_USER","id":"52fc5b7206cb8add3f55caec","name":"Manage User"},{"authority":"ROLE_MANAGE_ROLE","id":"52fc5b7206cb8add3f55caf0","name":"Manage Role"}],"authToken":"4FACB7C1DC4A30108D803EDCF4443A43","accountNonExpired":false,"accountNonLocked":false,"credentialsNonExpired":false,"enabled":false,"roles":["52fc5f7106cb0ada3321ce06"],"id":"52fc602c06cbed469944d659","name":"Admin"});
+			  }
+			});
+			
+			asyncTest("Login Click Test", function() {
+				$("#username").val('admin@gmail.com');
+				$("#password").val('admin');
+				$('#login').click();
+				setTimeout(function() {
+					start();
+					var out = $('#user_information > font').text();
+					equal('Welcome Admin', out, "Login Click success");
+					require(["dataSourceTest"], function(dataSourceTest){
+						dataSourceTest.runTests();
+					});
+				},2500);
+			});	
+		}
+	};
+});

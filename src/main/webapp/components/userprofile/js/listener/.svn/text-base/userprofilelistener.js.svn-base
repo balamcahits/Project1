@@ -1,0 +1,78 @@
+define([], function() {
+
+	Clazz.createPackage("com.components.userprofile.js.listener");
+
+	Clazz.com.components.userprofile.js.listener.userprofilelistener = Clazz.extend(Clazz.WidgetWithTemplate, {
+		userProfilecreate : null,
+		userProfileedit : null,
+		
+		/***
+		 * Called in initialization time of this class 
+		 *
+		 * @config: configurations for this listener
+		 */
+		initialize : function(config) {
+		},
+		
+		ajaxCall : function(header, callback) {
+			try {
+				commonVariables.api.ajaxRequest(header,
+					function(response) {
+						callback(response);
+
+					},
+
+					function(textStatus) {
+					}
+				);
+			} catch(exception) {
+			}
+		},
+		
+		getRequestHeader : function(projectRequestBody, type, descid) {
+			var header;
+			
+			var user = commonVariables.api.localVal.getJson("userData");
+			var authToken = commonVariables.api.localVal.getSession("jsessionid");
+			
+			header = {
+				dataType: "json",
+				contentType:"application/json"
+			};
+			
+			if(type === "getuserProfile"){
+				header.requestMethod = "GET";
+				header.webserviceurl = commonVariables.webserviceurl + "userProfile";
+			}
+			
+			if(type === 'getProfilePic') {
+				header.requestMethod = "GET";
+				header.webserviceurl = commonVariables.webserviceurl + "users/getProfilePic?userId=" + projectRequestBody;
+			}
+			
+			if(type === "getUserData") {
+				header.requestMethod = "GET";
+				header.webserviceurl = commonVariables.webserviceurl + "users/" + user.id+";jsessionid="+authToken;
+			}
+			
+			if(type === "create"){
+				header.requestMethod = "POST";
+				header.requestPostBody = JSON.stringify(projectRequestBody);
+				header.webserviceurl = commonVariables.webserviceurl + "users;jsessionid="+authToken;
+			}
+			
+			if(type === "edit"){
+				header.requestMethod = "GET";
+				header.webserviceurl = commonVariables.webserviceurl + "userProfile/" + commonVariables.roleId;
+			}
+			return header;
+		},
+				
+		fnGetSelected : function( oTableLocal ) {
+			return oTableLocal.$('tr.row_selected');
+		}
+
+	});
+
+	return Clazz.com.components.userprofile.js.listener.userprofilelistener;
+});

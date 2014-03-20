@@ -1,0 +1,380 @@
+define(["views/listener/viewsListener"], function() {
+	Clazz.createPackage("com.components.views.js");
+	Clazz.com.components.views.js.viewsEdit = Clazz.extend(Clazz.WidgetWithTemplate, {
+	
+		templateUrl: commonVariables.contexturl + "components/views/template/viewsEdit.tmp",
+		name : commonVariables.viewsEdit,
+		viewsListener : null,
+		datasourcetype : {},
+		dataSourceInfo : {},
+		views : null,
+		changeOperationEvent : null,
+		
+		/***
+		 * Called in initialization time of this class 
+		 *
+		 * @globalConfig: global configurations for this class
+		 */
+		initialize : function(globalConfig) {
+			var self = this;
+			if (self.viewsListener === null ) {
+				self.viewsListener = new Clazz.com.components.views.js.listener.viewsListener();
+			}
+			self.registerEvents(self.viewsListener);
+		},
+		
+		registerEvents : function(viewsListener) {
+			var self = this;
+			
+			if (self.changeOperationEvent === null) {
+				self.changeOperationEvent = new signals.Signal();
+			}
+			
+			self.changeOperationEvent.add(viewsListener.changeOperation, viewsListener);
+		},
+		
+		preRender: function(whereToRender, renderFunction){
+			var self = this;
+			self.viewsListener.ajaxCall(self.viewsListener.getRequestHeader('', "editDashboard"), function(response) {
+				self.datasourcetype.dashboardData = response.response;
+				self.viewsListener.ajaxCall(self.viewsListener.getRequestHeader('', "datasourcetype"), function(response) {
+					self.datasourcetype.data = response.response;
+					self.viewsListener.ajaxCall(self.viewsListener.getRequestHeader(self.datasourcetype.dashboardData.dataSourceTypeId, "datasource"), function(responseData) {
+						self.dataSourceInfo = responseData.response;
+						renderFunction(self.datasourcetype, whereToRender);	
+					});
+				});
+			});   
+		}, 
+		
+		constructDatasourceOption : function(callback){
+			var self = this;
+			$.each(self.dataSourceInfo, function(index,value) {
+				$('#dataSourceId').append('<option value='+value.id+'>'+value.name+'</option>');
+			});
+			callback(true);
+		},
+		
+		postRender : function(element) {
+			var self = this;
+			self.viewsListener.ajaxCall(self.viewsListener.getRequestHeader('', "query"), function(response) {
+				$.each(response.response,function(index,value) {
+					$('#query').append('<option value='+value.name.replace(/ /g,'')+' id='+value.id+'>'+value.name+'</option>');
+				});
+				var tempVall = $('#query option:first').text();
+				$('.queryy').find('.filter-option').text(tempVall);								
+			});
+			
+			
+			$('#widgetType > option').each(function(index, value){
+				var widgetType = $(this).attr('value');
+				if(self.datasourcetype.dashboardData.properties.type[0] === widgetType){
+					$(this).attr('selected', 'selected');
+					$(this).parent().selectpicker('refresh');
+				}
+			});
+			
+			var typeofchart = $('#widgetType').val();
+			if(typeofchart === 'table') {
+				self.optionsshowhide('');
+			} else if(typeofchart === 'linechart') {
+				self.optionsshowhide('line-chart-container');
+			} else if(typeofchart === 'piechart') {
+				self.optionsshowhide('pie-chart-container');
+			} else if(typeofchart === 'barchart') {
+				self.optionsshowhide('bar-chart-container');
+			} else if(typeofchart === 'multilinechart') {
+				self.optionsshowhide('multi-line-chart-container');
+			}
+			
+			console.info(self.datasourcetype.dashboardData.properties.xaxis.toString());
+			var xprop = self.datasourcetype.dashboardData.properties.xaxis.toString();
+			var t = xprop.split('#');
+			$('#xaxis').append('<option value='+xprop+'>'+t[0]+'</option>');
+			$('#multilineaxis').append('<option value='+xprop+'>'+t[0]+'</option>');
+			$('#yaxis').append('<option value='+xprop+'>'+t[0]+'</option>');
+			$('#percentval').append('<option value='+xprop+'>'+t[0]+'</option>');
+			$('#legendval').append('<option value='+xprop+'>'+t[0]+'</option>');
+			$('#baraxis').append('<option value='+xprop+'>'+t[0]+'</option>');
+			$('#line-chart-container').find('.selectpicker').selectpicker('refresh');
+			$('#multi-line-chart-container').find('.selectpicker').selectpicker('refresh');
+			$('#pie-chart-container').find('.selectpicker').selectpicker('refresh');
+			$('#bar-chart-container').find('.selectpicker').selectpicker('refresh');
+			$('ul[name="sortable1"]').append('<li value='+xprop+'><div class="bar_radio"><input type="checkbox" name="optionsRadiosfd" value='+xprop+'></div><div name="envListName" class="bar_name">'+t[0]+'</div></li>');			
+			$('ul[name="sortable2"]').append('<li value='+xprop+'><div class="bar_radio"><input type="checkbox" name="optionsRadiosfdline" value='+xprop+'></div><div name="envListName" class="bar_name">'+t[0]+'</div></li>');			
+			
+			$('#dataSourceType > option').each(function(index, value){
+				var dataSourceTypeId = $(this).attr('id');
+				if(self.datasourcetype.dashboardData.dataSourceTypeId === dataSourceTypeId){
+					$(this).attr('selected', 'selected');
+					$(this).parent().selectpicker('refresh');
+				}
+			});
+			
+			self.constructDatasourceOption(function(returnVal){
+				if(returnVal){
+					$('#dataSourceId > option').each(function(index, value){
+						var datasourceId = $(this).attr('value');
+						if(self.datasourcetype.dashboardData.dataSourceId === datasourceId){
+							$(this).attr('selected', 'selected');
+							$(this).parent().selectpicker('refresh');
+						}
+					});
+				}
+			});
+			
+			$('#query > option').each(function(index, value){
+				var queryId = $(this).attr('id');
+				if(self.datasourcetype.dashboardData.queryId === queryId){
+					$(this).attr('selected', 'selected');
+					$(this).parent().selectpicker('refresh');
+				}
+			});
+			
+			if(self.datasourcetype.dashboardData.autorefresh !== 'false') {
+				$('#timeoutval').show();
+				$('#timeoutval').val(self.datasourcetype.dashboardData.autorefresh);
+				$('#timeout').prop('checked',true);
+			}
+			
+			if(self.datasourcetype.dashboardData.canShow === true) {
+				$("#showhideDashboard").val(true);
+				$('#showhideDashboard').prop('checked',true);
+			}
+
+			self.viewsListener.ajaxCall(self.viewsListener.getRequestHeader('', "dashboardType"), function(response) {
+				$.each(response.response,function(index,value) {
+					$('#dashboardType').append('<option value='+value.id+'>'+value.name+'</option>');
+				});
+				var tempVal2 = $('#dashboardType option:first').text();
+				$('.dashtype').find('.filter-option').text(tempVal2);
+			});			
+			
+		},
+		
+		optionsshowhide : function(tr_toshow) {
+			var self = this;
+			$("#line-chart-container").hide();
+			$("#multi-line-chart-container").hide();
+			$("#pie-chart-container").hide();
+			$("#bar-chart-container").hide();
+			if(tr_toshow !== '' && tr_toshow !== 'table') {
+				$("#"+tr_toshow).show();
+			} 	
+		 },
+		
+		/***
+		 * Bind the action listeners. The bindUI() is called automatically after the render is complete 
+		 *
+		 */
+		bindUI : function(){
+			var self=this, height;
+			$('.hasChild ').find('ul.acc-menu').show().closest('li').addClass('open');		
+			
+			var offset, currentHeight;
+
+			offset = 116;
+			currentHeight = $(window).height();
+
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+				switch(currentHeight) {
+					case 460:
+					case 548: offset = 107; break;
+					case 480:
+					case 568: offset = 127; break;
+					default: offset = 116; break; 
+				}
+			} 
+
+			tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+			$('.create_table_div').css('height',tabheight + 'px'); 
+			
+			$(window).resize(function() {
+				
+				offset = 116;
+				currentHeight = $(window).height();
+
+				if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+					switch(currentHeight) {
+						case 200:
+						case 288: offset = 66; break;
+						case 220:
+						case 308: offset = 86; break;
+						case 460:
+						case 548: offset = 107; break;
+						case 480:
+						case 568: offset = 127; break;
+						default: offset = 116; break; 
+					}
+				} 
+				
+				tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+				$('.create_table_div').css('height',tabheight + 'px'); 
+			});
+			
+			$("#line-chart-container").hide();
+			$("#multi-line-chart-container").hide();
+			$("#pie-chart-container").hide();
+			$("#bar-chart-container").hide();
+			$("#timeoutval").hide();
+			
+			$('#datetimepicker1').datetimepicker({
+			});
+				  
+			$('#datetimepicker2').datetimepicker({
+			});
+			
+			$('.selectpicker').selectpicker();
+			
+			$('#colorpalette1').colorPalette()
+			  .on('selectColor', function(e) {
+				$('#selectedcolor1').val(e.color);
+			  });
+			
+			$('.connected').sortable({
+				connectWith: '.connected'
+			}); 
+
+			$("#dataSourceType").unbind('change');
+			$("#dataSourceType").change(function() {
+				var typeId = $('#dataSourceType option:selected').attr('id');
+				self.viewsListener.ajaxCall(self.viewsListener.getRequestHeader(typeId, "datasource"), function(responseData) {
+					if(responseData !== null && responseData.response !== null){
+						$('#dataSourceId').empty();
+						$('.datsrc').find('.filter-option').text('');
+						$.each(responseData.response,function(index,value) {
+							$('#dataSourceId').append('<option value='+value.id+'>'+value.name+'</option>');
+						});
+						var tempVal = $('#dataSourceId option:first').text();
+						$('.datsrc').find('.filter-option').text(tempVal);
+					}
+				});
+			});	
+		
+			$("#widgetType").unbind('change');
+			$("#widgetType").change(function() {
+				var typeofchart = $(this).children('option:selected').val();
+				if(typeofchart === 'table') {
+					self.optionsshowhide('');
+				} else if(typeofchart === 'linechart') {
+					self.optionsshowhide('line-chart-container');
+				} else if(typeofchart === 'piechart') {
+					self.optionsshowhide('pie-chart-container');
+				} else if(typeofchart === 'barchart') {
+					self.optionsshowhide('bar-chart-container');
+				} else if(typeofchart === 'multilinechart') {
+					self.optionsshowhide('multi-line-chart-container');
+				}	
+			});
+			
+			$("#timeout").unbind('change');
+			$("#timeout").change(function() {
+				if($(this).is(':checked')) {
+					$("#timeoutval").show();
+				} else {
+					$("#timeoutval").hide();
+				}		
+			});
+			
+			$("#showhideDashboard").unbind('change');
+			$("#showhideDashboard").change(function() {
+				if($(this).is(':checked')) {
+					$(this).val(true);
+				} else {
+					$(this).val(false);
+				}		
+			});
+			
+			$("#timeoutval").bind('keypress',function(e) {
+				if((e.which >= 48 && e.which <= 57) || (e.which === 8)){
+					return true;
+				} else {
+					e.preventDefault();
+				}
+			});
+			
+			$("#query").on("change", function(){					
+				self.changeOperationEvent.dispatch();
+			});
+			
+			var flag = 0;
+			$("#dashboardUpdate").click(function() {
+				var name = $("#widget_name");
+				if(name.val() === '') {
+					name.addClass('errormessage');
+					name.focus();
+					name.attr('placeholder','Enter Widget Name');
+					name.bind('keypress', function() {
+						$(this).removeClass("errormessage");
+						$(this).removeAttr("placeholder");
+					});
+				} else if($("#timeout").is(":checked")) {
+					if($("#timeoutval").val() === '') {
+						$("#timeoutval").addClass('errormessage');
+						$("#timeoutval").focus();
+						$("#timeoutval").attr('placeholder','Enter Refresh Interval value');
+						$("#timeoutval").bind('keypress', function() {
+							$(this).removeClass("errormessage");
+							$(this).removeAttr("placeholder");
+						});
+					} else {
+						flag = 1;
+					}
+				} else {
+					flag = 1;
+				}	
+				
+				if(flag ===1) {
+					var postData = {};
+					postData.name = name.val();		
+					postData.id = commonVariables.dashboardId;
+					postData.dataSourceTypeId = $('#dataSourceType option:selected').attr('id');				
+					postData.dataSourceId = $('#dataSourceId').val();
+					postData.dashBoardTypeId = $('#dashboardType').val();
+					postData.ownerId = "admin";				
+					postData.queryId = $('#query option:selected').attr('id');					
+					postData.rangeFrom = $("#fromTime").val();
+					postData.rangeTo = $("#toTime").val();
+					postData.properties = {};
+					postData.properties.type = [];
+					postData.properties.type.push($('#widgetType').val());
+					postData.properties.xaxis = [];
+					postData.properties.yaxis = [];
+					if($('#widgetType').val() === 'linechart') {
+						postData.properties.xaxis.push($("#xaxis option:selected").val());					
+						postData.properties.yaxis.push($("#yaxis option:selected").val());
+					} else if($('#widgetType').val() === 'piechart') {
+						postData.properties.xaxis.push($("#percentval option:selected").val());					
+						postData.properties.yaxis.push($("#legendval option:selected").val());
+					} else if($('#widgetType').val() === 'barchart') {
+						postData.properties.xaxis.push($("#baraxis option:selected").val());					
+						//postData.properties.yaxis.push($("#legendval option:selected").val());
+					}
+					postData.canShow = $("#showhideDashboard").val();
+					if($("#timeout").is(":checked"))
+						postData.autorefresh = $("#timeoutval").val();
+					else 
+						postData.autorefresh = "false";
+					 self.viewsListener.ajaxCall(self.viewsListener.getRequestHeader(postData, "create"), function(response) {
+						if(response) {
+							commonVariables.navListener.getMyObj('views', function(retVal) {
+								var viewsData = retVal;							
+								Clazz.navigationController.push(viewsData, commonVariables.animation);
+							});
+						}
+					});
+				}
+			});
+			
+			$("#cancel_create").click(function() {
+				commonVariables.navListener.getMyObj('views', function(retVal) {
+					self.views = retVal;							
+					Clazz.navigationController.push(self.views, commonVariables.animation);
+				});
+			});
+			
+		}
+	});
+	
+	return Clazz.com.components.views.js.viewsEdit;
+});

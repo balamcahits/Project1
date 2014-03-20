@@ -1,0 +1,64 @@
+<div id="container">
+	<div class="outer_div">
+    	<div class="login_div">
+			  <div class="login_error_msg"></div>
+			  <div class="login_header"><img src="themes/images/login_logo_walgreens.png" alt="Walgreens Logo"></div>
+            	<div class="form-group">
+                    <div class="col-sm-8">
+                    	<div id="usernameDiv" class="login_user">
+                            <div class="credential_icon"><img src="themes/images/username_icon.png" alt="Username"></div>
+                            <div class="login_text"><input type="text" id="username" autocorrect="off" autocapitalize="off" placeholder="Username" maxlength="60" value=""></div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>    
+                	<div class="col-sm-4 mob_hidden">
+                    	<label class="control-label">Save</label>
+                        <fieldset class="switch_yes_no">
+                            <label class="no"><input type="radio" class="on_off" name="on_off" value="no"/></label>
+                            <label class="yes"><input type="radio" class="on_off" name="on_off" value="yes"/></label>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="form-group">
+                    <div class="col-sm-8">
+                    	<div id="passwordDiv" class="login_user">
+                            <div class="credential_icon"><img src="themes/images/paswword_icon.png" alt="Password"></div>
+                            <div class="login_text"><input type="password" placeholder="Password" id="password" maxlength="30" value=""></div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>    
+                	<div class="col-sm-4 mob_hidden">
+                    	<label class="control-label">Save</label>
+                        <fieldset class="switch_yes_no">
+                            <label class="off"><input type="radio" class="on_off" name="on_off" value="off"/></label>
+                            <label class="on"><input type="radio" class="on_off" name="on_off" value="on"/></label>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="form-group">                        
+                    <div class="col-sm-12"><input id="login" type="button" class="form-control login_btn" value="LOGIN"></div>
+                </div>
+                <div class="clear"></div>
+                <div class="form-group">                        
+                    <div class="col-sm-12">
+                    	<div class="forgot_password_container">
+							<div class="dropdown">
+								<div class="forgot_password">
+									<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">Forgot Password</a>
+									<ul class="user_data">
+										<li class="login_id float_left">Email ID</li>
+										<li class="float_left"><input type="text" id="email_forgot"></li>
+										<li class="float_left"><div class="forgot_alert"></div></li>
+										<li class="float_right"><input id="forgot_pswd_submit" type="button" class="btn_style" value="Submit"><input type="button" id="forgot_pswd_cancel" class="btn_style" value="Cancel"></li>
+									</ul>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,247 @@
+define(["framework/widgetWithTemplate", "user/listener/userListener"], function() {
+	Clazz.createPackage("com.components.user.js");
+
+	Clazz.com.components.user.js.userCreate = Clazz.extend(Clazz.WidgetWithTemplate, {
+		userListener : null,
+		// template URL, used to indicate where to get the template
+		templateUrl: commonVariables.contexturl + "components/user/template/userCreate.tmp",
+		configUrl: "components/user/config/config.json",
+		name : commonVariables.user,
+		user : null,
+		usersRequestBody : {},
+		userdata : {},
+		hasError : false,
+		
+		/***
+		 * Called in initialization time of this class 
+		 */
+		initialize : function(){
+			var self = this;
+			if(self.userListener === null){
+				self.userListener = new Clazz.com.components.user.js.listener.userListener();
+			}	
+		},
+
+		postRender : function(element) {
+			var self=this;
+			self.userListener.getUsersList(self.userListener.getActionHeader('', "roles"), function(response) {
+				if(response !== null){
+					$.each(response, function(index, value){
+						$('#roles ul').append('<li id='+value.id+'><input type="checkbox">'+value.name+'</li>');
+					});
+				}
+			}); 
+		},
+		
+		validation : function() {
+			var self = this;
+			var userData = commonVariables.api.localVal.getJson("userData");
+			var firstnameobj = $("#userfirstname");
+			var lastnameobj = $("#userlastname");
+			var emailobj = $("#useremail");
+			var passwordobj = $("#password");
+			var confirmPwdobj = $("#confirmpwd");
+			
+			if(firstnameobj.val() === '') {
+				firstnameobj.addClass('errormessage');
+				firstnameobj.focus();
+				firstnameobj.attr('placeholder','Enter First Name');
+				firstnameobj.bind('keypress', function() {
+					$(this).removeClass("errormessage");
+					$(this).removeAttr("placeholder");
+				});
+				self.hasError = true;
+			} else if(lastnameobj.val() === '') {
+				lastnameobj.addClass('errormessage');
+				lastnameobj.focus();
+				lastnameobj.attr('placeholder','Enter Last Name');
+				lastnameobj.bind('keypress', function() {
+					$(this).removeClass("errormessage");
+					$(this).removeAttr("placeholder");
+				});
+				self.hasError = true;
+			} else if(emailobj.val() === '') {
+					emailobj.addClass('errormessage');
+					emailobj.focus();
+					emailobj.attr('placeholder','Enter Email');
+					emailobj.bind('keypress', function() {
+						$(this).removeClass("errormessage");
+						$(this).removeAttr("placeholder");
+					});
+					self.hasError = true;	
+			}  else if(passwordobj.val() === '') {
+				passwordobj.addClass('errormessage');
+				passwordobj.focus();
+				passwordobj.attr('placeholder','Enter Password');
+				passwordobj.bind('keypress', function() {
+					$(this).removeClass("errormessage");
+					$(this).removeAttr("placeholder");
+				});
+				self.hasError = true;
+			} else if(confirmPwdobj.val() === '') {
+				confirmPwdobj.addClass('errormessage');
+				confirmPwdobj.focus();
+				confirmPwdobj.attr('placeholder','Enter Confirm Password');
+				confirmPwdobj.bind('keypress', function() {
+					$(this).removeClass("errormessage");
+					$(this).removeAttr("placeholder");
+				});
+				self.hasError = true;
+			}  else if(passwordobj.val() !== '' && confirmPwdobj.val() !== '') {
+				if(!(passwordobj.val() === confirmPwdobj.val())){
+					confirmPwdobj.addClass('errormessage');
+					confirmPwdobj.focus();
+					self.userListener.alertifyMessage("Password did not Match");	
+					self.hasError = true;
+				} else {
+					self.hasError = false;
+				}
+			} else 
+				self.hasError = false;
+			var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+			if(!emailReg.test(emailobj.val()) && self.hasError === false) {
+				emailobj.addClass('errormessage');
+				emailobj.focus();
+				self.userListener.alertifyMessage("Invalid Email Address");		
+				emailobj.bind('keypress', function() {
+					$(this).removeClass("errormessage");
+					$(this).removeAttr("placeholder");
+				});
+				self.hasError = true;
+			}
+			
+			return self.hasError;
+		},
+
+		/***
+		 * Bind the action listeners. The bindUI() is called automatically after the render is complete 
+		 *
+		 */
+		bindUI : function(){
+			var self=this, tabheight, firstName, lastName, email, userID;
+			
+			var offset, currentHeight;
+
+			offset = 116;
+			currentHeight = $(window).height();
+
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+				switch(currentHeight) {
+					case 460:
+					case 548: offset = 107; break;
+					case 480:
+					case 568: offset = 127; break;
+					default: offset = 116; break; 
+				}
+			} 
+
+			tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+			$('.create_table_div').css('height',tabheight + 'px'); 
+			
+			$(window).resize(function() {
+				
+				offset = 116;
+				currentHeight = $(window).height();
+
+				if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+					switch(currentHeight) {
+						case 200:
+						case 288: offset = 66; break;
+						case 220:
+						case 308: offset = 86; break;
+						case 460:
+						case 548: offset = 107; break;
+						case 480:
+						case 568: offset = 127; break;
+						default: offset = 116; break; 
+					}
+				} 
+				
+				tabheight =  $(window).height() - ($(".breadcrumb_div").height() + $(".header_section").height()) - offset;
+				$('.create_table_div').css('height',tabheight + 'px'); 
+			});
+			
+			$("#cancel_user").click(function() {
+				// Keyboard Fix for Mobile Devices
+				setTimeout(function(){
+					  window.scrollTo(0, 0);
+				}, 0);
+
+				commonVariables.navListener.getMyObj('user', function(retVal) {
+					self.user = retVal;							
+					Clazz.navigationController.push(self.user, commonVariables.animation);
+				});
+			});
+			
+			$("#usercreate").click(function() {
+				// Keyboard Fix for Mobile Devices
+				setTimeout(function(){
+					  window.scrollTo(0, 0);
+				}, 0);
+				
+				var firstnameobj = $("#userfirstname");
+				var lastnameobj = $("#userlastname");
+				var emailobj = $("#useremail");
+				var confirmPwdobj = $("#confirmpwd");
+				firstName = firstnameobj.val();
+				lastName = lastnameobj.val();
+				email = emailobj.val();
+				password = confirmPwdobj.val();
+				if(!self.validation()) {
+					self.usersRequestBody.firstName = firstName;
+					self.usersRequestBody.lastName = lastName;
+					self.usersRequestBody.emailId = email;
+					self.usersRequestBody.password = hex_md5($("#confirmpwd").val());
+					var assignedRoles = [];
+					$('#assigned ul li').each(function() {
+						assignedRoles.push($(this).attr('id'));
+					});
+					self.usersRequestBody.roles = assignedRoles;
+					self.userListener.getUsersList(self.userListener.getActionHeader(self.usersRequestBody, "create"), function(response) {
+						commonVariables.navListener.getMyObj('user', function(retVal) {
+							self.user = retVal;							
+							Clazz.navigationController.push(self.user, commonVariables.animation);
+						});
+					});
+				}	
+			});		
+			
+			$('#btnRight').click(function(e) {
+				var selectedOpts = [];
+				$('#roles ul li').each(function() {
+					if($(this).find('input[type="checkbox"]').prop('checked') === true) {
+						$(this).remove();
+						selectedOpts.push($(this));
+					}
+				});
+				if (selectedOpts.length == 0) {
+					alert("Nothing to move.");
+					e.preventDefault();
+				}				
+				$('#assigned ul').append(selectedOpts);
+				e.preventDefault();
+			});
+
+			$('#btnLeft').click(function(e) {
+				var selectedOpts = [];
+				$('#assigned ul li').each(function() {
+					if($(this).find('input[type="checkbox"]').prop('checked') === true) {
+						$(this).remove();
+						selectedOpts.push($(this));
+					}
+				});
+				if (selectedOpts.length == 0) {
+					alert("Nothing to move.");
+					e.preventDefault();
+				}
+				$('#roles ul').append(selectedOpts);
+				$('#roles ul').find('input[type="checkbox"]').removeAttr('checked');
+				e.preventDefault();
+			});
+			
+			Clazz.navigationController.jQueryContainer = commonVariables.contentPlaceholder;
+		}
+	});	
+
+	return Clazz.com.components.user.js.userCreate;
+});
